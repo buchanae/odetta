@@ -16,6 +16,5 @@ TODO how to use hadoop
 TODO link to mrjob docs
 
 TODO installing required packages, using pip, etc.
-TODO make vendor dir
 
 TODO better code comments
