@@ -1,9 +1,15 @@
 from mrjob.job import MRJob
+from mrjob.protocol import JSONProtocol, RawValueProtocol
 
 
 class CombineSplats(MRJob):
-    def reducer(self, splat_row, splats):
-        yield reduce(lambda x, y: x.merge(y), splats)
+
+    INPUT_PROTOCOL = JSONProtocol
+    OUTPUT_PROTOCOL = RawValueProtocol
+
+    def reducer(self, splat, IDs):
+        IDs = list(IDs)
+        yield None, splat['template'].format(read_count=len(IDs), IDs=','.join(IDs))
 
 
 if __name__ == '__main__':

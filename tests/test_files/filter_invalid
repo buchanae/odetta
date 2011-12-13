@@ -1,0 +1,6 @@
+"bas"	{"end": 729, "start": 628, "strand": "-1", "type": "SAM", "ID": "HWI-ST609:81:B09K8ABXX:5:1101:10000:2886\\1", "chromosome": "ChrC"}
+"baz"	{"end": 1035, "start": 934, "strand": "-1", "type": "SAM", "ID": "HWI-ST609:81:B09K8ABXX:5:1101:10001:4523\\1", "chromosome": "ChrC"}
+"foo"	{"end": 350, "start": 300, "strand": "1", "type": "SAM", "ID": "HWI-ST609:81:B09K8ABXX:5:1101:10001:6944\\2", "chromosome": "ChrB"}
+"bas"	{"end": 4, "IDs": ["bas", "baz"], "start": 1, "chromosome": "ChrC", "template": "ChrC\tAT-TT\t10\t99\t55\t1\t2\t3\t4\tGCTA\t{read_count}\t{IDs}\t-1", "type": "splat", "strand": "-1"}
+"baz"	{"end": 4, "IDs": ["bas", "baz"], "start": 1, "chromosome": "ChrC", "template": "ChrC\tAT-TT\t10\t99\t55\t1\t2\t3\t4\tGCTA\t{read_count}\t{IDs}\t-1", "type": "splat", "strand": "-1"}
+"foo"	{"end": 78, "IDs": ["foo"], "start": 12, "chromosome": "ChrB", "template": "ChrB\tAT-TG\t11\t88\t77\t56\t78\t12\t34\tATCG\t{read_count}\t{IDs}\t-1", "type": "splat", "strand": "-1"}

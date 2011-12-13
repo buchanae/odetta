@@ -1,66 +1,52 @@
-class Alignment(object):
-
-    """Base class for alignment data."""
-
-    def __init__(self):
-        pass
-
-    @property
-    def base_id(self):
-        """
-        Return the base of a read ID.
-
-        For example, the base ID of FooBar\1 is FooBar.
-        """
-        return self.id.split('\\')[0]
-
-    @property
-    def is_paired(self):
-        return self.id[-2:] == '\\1' or self.id[-2:] =='\\2'
-
-    @property
-    def pair_id(self):
-        """
-        TODO
-        """
-        return self.id[:-1]
-        
-    @property
-    def sister_id(self):
-        """
-        Return the sister ID of a paired read ID.
-
-        For example, the sister of FooBar\1 is FooBar\2.
-        """
-        return self.base_id + '\\2' if self.pair_id == '1' else '\\2'
-
-    def distance_to(self, other):
-        """Return the distance between to this alignment and another."""
-        if self.start < other.start:
-            return other.start - self.end
-        else:
-            return self.start - other.end
+def ID_base(ID):
+    return ID.split('\\')[0]
 
 
-class SAM(Alignment):
+def distance_between(a, b):
+    """Return the distance between to two alignments."""
 
-    """TODO"""
-
-    @property
-    def strand(self):
-        """TODO"""
-        pass
+    if a['start'] < b['start']:
+        return b['start'] - a['end']
+    else:
+        return a['start'] - b['end']
 
 
-class Splat(Alignment):
+def parse_SAM(raw):
+    data = {}
+    fields = raw.split('\t')
 
-    """TODO"""
+    flag = int(fields[1])
+    sequence = fields[9]
 
-    fields = ('chromosome', 'flanks', 'a_length', 'b_length', 'intron_length', 
-              'a_begin', 'a_end', 'b_begin', 'b_end', 'sequence')
+    data['ID'] = fields[0]
+    data['chromosome'] = fields[2]
+    data['start'] = int(fields[3])
+    data['end'] = data['start'] + len(sequence)
 
-    def merge(self, *others):
-        """TODO"""
-        #TODO check that fields are the same
-        # TODO don't duplicate read IDs
-        pass
+    # The SAM format stores strand info in a bitwise flag,
+    # not obscure at all...
+    data['strand'] = '-1' if flag & 16 else '1'
+    data['type'] = 'SAM'
+
+    return data
+
+
+def parse_splat(raw):
+    data = {}
+    fields = raw.split('\t')
+
+    data['template'] = '\t'.join(fields[:10] + ['{read_count}', '{IDs}'] + fields[12:])
+    data['chromosome'] = fields[0]
+    data['IDs'] = [x for x in fields[11].split(',')]
+    data['strand'] = fields[12]
+
+    a = int(fields[5])
+    b = int(fields[7])
+    data['start'] = a if a < b else b
+
+    a = int(fields[6])
+    b = int(fields[8])
+    data['end'] = a if a > b else b
+    data['type'] = 'splat'
+
+    return data

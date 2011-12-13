@@ -1,6 +1,6 @@
 from mrjob.job import MRJob
 
-from alignment import Alignment
+from alignment import ID_base, parse_SAM
 
 
 class FilterCompletePair(MRJob):
@@ -9,14 +9,11 @@ class FilterCompletePair(MRJob):
     TODO
     """
 
-    DEFAULT_PROTOCOL = 'pickle'
-    DEFAULT_OUTPUT_PROTOCOL = 'raw_value'
-
     def configure_options(self):
         """
         TODO
         """
-        super(FilterCompletePair, self).configure_option()
+        super(FilterCompletePair, self).configure_options()
         # TODO
         self.add_passthrough_option('--invert')
 
@@ -24,22 +21,22 @@ class FilterCompletePair(MRJob):
         """
         TODO
         """
-        a = Alignment.from_SAM(line)       
-        yield a.base_id, a
+        a = parse_SAM(line)
+        yield ID_base(a['ID']), a
 
-    def reducer(self, base_id, alignments):
+    def reducer(self, ID_base, alignments):
         """
         TODO
         """
-        ids = set()
+        alignments = list(alignments)
+        IDs = set()
 
         for a in alignments:
-            ids.add(a.pair_id)
+            IDs.add(a['ID'])
 
-        if len(ids) == 1:
+        if len(IDs) == 1:
             for a in alignments:
-                # TODO can yield only key or value and not both?
-                yield a
+                yield a['ID'], a
 
 
 if __name__ == '__main__':

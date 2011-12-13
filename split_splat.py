@@ -1,6 +1,6 @@
 from mrjob.job import MRJob
 
-from alignment import Alignment
+from alignment import parse_splat
 
 
 class SplitSplat(MRJob):
@@ -10,8 +10,10 @@ class SplitSplat(MRJob):
     """
 
     def mapper(self, key, line):
-        for splat in Splat.from_string(line).split():
-            yield splat
+        splat = parse_splat(line)
+
+        for ID in splat['IDs']:
+            yield ID, splat
 
 if __name__ == '__main__':
     SplitSplat.run()

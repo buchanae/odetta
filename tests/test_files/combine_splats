@@ -1,0 +1,2 @@
+{"end": 78, "IDs": ["foo"], "start": 12, "chromosome": "ChrB", "template": "ChrB\tAT-TG\t11\t88\t77\t56\t78\t12\t34\tATCG\t{read_count}\t{IDs}\t-1", "type": "splat", "strand": "-1"}	"foo"
+{"end": 78, "IDs": ["foo"], "start": 12, "chromosome": "ChrB", "template": "ChrB\tAT-TG\t11\t88\t77\t56\t78\t12\t34\tATCG\t{read_count}\t{IDs}\t-1", "type": "splat", "strand": "-1"}	"bar"
