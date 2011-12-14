@@ -37,8 +37,16 @@ def parse_splat(raw):
 
     data['template'] = '\t'.join(fields[:10] + ['{read_count}', '{IDs}'] + fields[12:])
     data['chromosome'] = fields[0]
-    data['IDs'] = [x for x in fields[11].split(',')]
-    data['strand'] = fields[12]
+
+    try:
+        data['IDs'] = [x for x in fields[11].split(',')]
+    except IndexError:
+        data['IDs'] = []
+
+    try:
+        data['strand'] = fields[12]
+    except IndexError:
+        data['strand'] = None
 
     a = int(fields[5])
     b = int(fields[7])

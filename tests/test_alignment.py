@@ -44,3 +44,7 @@ def test_Splat():
     eq_(['bas', 'baz'], a['IDs'])
     eq_('-1', a['strand'])
     eq_('\t'.join([base, '{read_count}\t{IDs}', strand]), a['template'])
+
+    b = parse_splat(base)
+    eq_([], b['IDs'])
+    eq_(None, b['strand'])
