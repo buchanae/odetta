@@ -1,4 +1,4 @@
-from itertools import permutations
+from itertools import combinations
 
 from mrjob.job import MRJob
 from mrjob.protocol import JSONProtocol
@@ -32,9 +32,8 @@ class FilterInvalidPair(MRJob):
 
     def reducer(self, ID_base, alignments):
 
-        valid = set()
         alignments = list(alignments)
-        for (x_ID, x), (y_ID, y) in permutations(alignments, 2):
+        for (x_ID, x), (y_ID, y) in combinations(alignments, 2):
 
             if x != y and x['chromosome'] == y['chromosome'] and \
                x['strand'] != y['strand']:
