@@ -54,7 +54,8 @@ class FilterInvalidPair(MRJob):
         """
         TODO
         """
-        yield splat, IDs.next()
+        for ID in set(IDs):
+            yield splat, ID
 
     def steps(self):
         """

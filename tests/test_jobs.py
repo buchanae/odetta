@@ -37,7 +37,7 @@ def test_filter_invalid_pairs():
     j = FilterInvalidPair().sandbox(f)
     j.run_job()
     out = j.parse_output()
-    eq_(['foo'], [x[1] for x in out])
+    eq_(['bat', 'bay', 'foo'], sorted([x[1] for x in out]))
 
 def test_filter_invalid_pairs_with_distance():
     f = open(tf.path('filter_invalid_distance'))
