@@ -15,7 +15,7 @@ def test_split_splat():
     j.run_job()
     out = j.parse_output()
     eq_(3, len(out))
-    eq_(['bas', 'baz', 'foo'], [x[0] for x in out])
+    eq_(['bas', 'baz', 'foo'], sorted([x[0] for x in out]))
 
 def test_filter_complete_pair():
     f = open(tf.path('filter_complete.sam'))
@@ -23,7 +23,7 @@ def test_filter_complete_pair():
     j.run_job()
     out = j.parse_output()
     eq_(2, len(out))
-    eq_(['BAR\\2', 'OOF\\1'], [x[0] for x in out])
+    eq_(['BAR\\2', 'OOF\\1'], sorted([x[0] for x in out]))
 
 def test_filter_invalid_pairs():
     f = open(tf.path('filter_invalid'))
