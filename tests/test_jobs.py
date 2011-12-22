@@ -25,6 +25,16 @@ def test_filter_complete_pair():
     eq_(2, len(out))
     eq_(['BAR\\2', 'OOF\\1'], sorted([x[0] for x in out]))
 
+def test_inverted_filter_complete_pair():
+    f = open(tf.path('filter_complete.sam'))
+    j = FilterCompletePair(args=['--invert']).sandbox(f)
+    j.run_job()
+    out = j.parse_output()
+    print out
+    eq_(8, len(out))
+    eq_(['BAS\\1', 'BAS\\2', 'BAZ\\1', 'BAZ\\2', 
+         'FOO\\1', 'FOO\\2', 'TEST\\1', 'TEST\\2'], sorted([x[0] for x in out]))
+
 def test_filter_invalid_pairs():
     f = open(tf.path('filter_invalid'))
     j = FilterInvalidPair().sandbox(f)

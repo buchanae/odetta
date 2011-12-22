@@ -15,7 +15,7 @@ class FilterCompletePair(MRJob):
         """
         super(FilterCompletePair, self).configure_options()
         # TODO
-        self.add_passthrough_option('--invert')
+        self.add_passthrough_option('--invert', action='store_true')
 
     def mapper(self, key, line):
         """
@@ -34,7 +34,9 @@ class FilterCompletePair(MRJob):
         for a in alignments:
             IDs.add(a['ID'])
 
-        if len(IDs) == 1:
+        if (self.options.invert and len(IDs) > 1) or \
+           (not self.options.invert and len(IDs) == 1):
+
             for a in alignments:
                 yield a['ID'], a
 
