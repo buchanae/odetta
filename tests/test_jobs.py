@@ -1,5 +1,7 @@
+import logging
+
 from nose.tools import eq_
-from mrjob.protocol import RawValueProtocol
+import mrjob
 
 from combine_splats import CombineSplats
 from filter_complete_pair import FilterCompletePair
@@ -7,6 +9,12 @@ from filter_invalid_pair import FilterInvalidPair
 from split_splat import SplitSplat
 
 import test_files as tf
+
+
+# disable mrjob loggers
+logging.getLogger('mrjob.local').setLevel(100)
+logging.getLogger('mrjob.runner').setLevel(100)
+logging.getLogger('mrjob.conf').setLevel(100)
 
 
 def test_split_splat():
@@ -37,7 +45,7 @@ def test_filter_invalid_pairs():
     j = FilterInvalidPair().sandbox(f)
     j.run_job()
     out = j.parse_output()
-    eq_(['bat', 'bay', 'foo'], sorted([x[1] for x in out]))
+    eq_(['bat', 'bay', 'foo'], sorted([x[0] for x in out]))
 
 def test_filter_invalid_pairs_with_distance():
     f = open(tf.path('filter_invalid_distance'))
@@ -45,12 +53,12 @@ def test_filter_invalid_pairs_with_distance():
                                 '--max-distance', '1000']).sandbox(f)
     j.run_job()
     out = j.parse_output()
-    eq_(['bar', 'bas'], sorted([x[1] for x in out]))
+    eq_(['bar', 'bas'], sorted([x[0] for x in out]))
 
 def test_combine_splats():
     f = open(tf.path('combine_splats'))
     j = CombineSplats().sandbox(f)
     j.run_job()
-    out = j.parse_output(RawValueProtocol())
+    out = j.parse_output(mrjob.protocol.RawValueProtocol())
     eq_(1, len(out))
     eq_('ChrB\tAT-TG\t11\t88\t77\t56\t78\t12\t34\tATCG\t2\tbar,foo\t-1\n', out[0][1])
