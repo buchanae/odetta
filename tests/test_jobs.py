@@ -14,7 +14,6 @@ def test_split_splat():
     j = SplitSplat().sandbox(f)
     j.run_job()
     out = j.parse_output()
-    eq_(3, len(out))
     eq_(['bas', 'baz', 'foo'], sorted([x[0] for x in out]))
 
 def test_filter_complete_pair():
@@ -22,7 +21,6 @@ def test_filter_complete_pair():
     j = FilterCompletePair().sandbox(f)
     j.run_job()
     out = j.parse_output()
-    eq_(2, len(out))
     eq_(['BAR\\2', 'OOF\\1'], sorted([x[0] for x in out]))
 
 def test_inverted_filter_complete_pair():
@@ -31,7 +29,6 @@ def test_inverted_filter_complete_pair():
     j.run_job()
     out = j.parse_output()
     print out
-    eq_(8, len(out))
     eq_(['BAS\\1', 'BAS\\2', 'BAZ\\1', 'BAZ\\2', 
          'FOO\\1', 'FOO\\2', 'TEST\\1', 'TEST\\2'], sorted([x[0] for x in out]))
 
@@ -40,8 +37,15 @@ def test_filter_invalid_pairs():
     j = FilterInvalidPair().sandbox(f)
     j.run_job()
     out = j.parse_output()
-    eq_(1, len(out))
     eq_(['foo'], [x[1] for x in out])
+
+def test_filter_invalid_pairs_with_distance():
+    f = open(tf.path('filter_invalid_distance'))
+    j = FilterInvalidPair(args=['--min-distance', '100', 
+                                '--max-distance', '1000']).sandbox(f)
+    j.run_job()
+    out = j.parse_output()
+    eq_(['bar', 'bas'], sorted([x[1] for x in out]))
 
 def test_combine_splats():
     f = open(tf.path('combine_splats'))

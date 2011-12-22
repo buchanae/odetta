@@ -6,10 +6,6 @@ from mrjob.protocol import JSONProtocol
 from alignment import ID_base, distance_between
 
 
-min_distance = 100
-max_distance = 1000
-
-
 class FilterInvalidPair(MRJob):
 
     """
@@ -23,24 +19,30 @@ class FilterInvalidPair(MRJob):
         TODO
         """
         super(FilterInvalidPair, self).configure_options()
-        # TODO
-        self.add_passthrough_option('--min-distance')
-        self.add_passthrough_option('--max-distance')
+        self.add_passthrough_option('--min-distance', action='store',
+                                    type=float, default=float('-inf'))
+        self.add_passthrough_option('--max-distance', action='store',
+                                    type=float, default=float('inf'))
 
     def mapper(self, ID, alignment):
+        """
+        TODO
+        """
         yield ID_base(ID), (ID, alignment)
 
     def reducer(self, ID_base, alignments):
-
+        """
+        TODO
+        """
         alignments = list(alignments)
+
         for (x_ID, x), (y_ID, y) in combinations(alignments, 2):
 
             if x != y and x['chromosome'] == y['chromosome'] and \
                x['strand'] != y['strand']:
 
-
                 d = distance_between(x, y)
-                if d > min_distance and d < max_distance:
+                if d >= self.options.min_distance and d <= self.options.max_distance:
 
                     if x['type'] == 'splat':
                         yield x, x_ID
@@ -49,9 +51,15 @@ class FilterInvalidPair(MRJob):
                         yield y, y_ID
 
     def duplicates_reducer(self, splat, IDs):
+        """
+        TODO
+        """
         yield splat, IDs.next()
 
     def steps(self):
+        """
+        TODO
+        """
         return [self.mr(mapper=self.mapper, reducer=self.reducer),
                 self.mr(reducer=self.duplicates_reducer)]
 
