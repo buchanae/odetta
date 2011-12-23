@@ -3,6 +3,7 @@ import logging
 from nose.tools import eq_
 import mrjob
 
+from calc_distance_stats import CalcDistanceStats
 from combine_splats import CombineSplats
 from filter_complete_pair import FilterCompletePair
 from filter_invalid_pair import FilterInvalidPair
@@ -62,3 +63,11 @@ def test_combine_splats():
     out = j.parse_output(mrjob.protocol.RawValueProtocol())
     eq_(1, len(out))
     eq_('ChrB\tAT-TG\t11\t88\t77\t56\t78\t12\t34\tATCG\t2\tbar,foo\t-1\n', out[0][1])
+
+def test_distance_stats():
+    f = open(tf.path('distance_stats'))
+    j = CalcDistanceStats().sandbox(f)
+    j.run_job()
+    out = j.parse_output()
+    eq_(1, len(out))
+    eq_([470.0, 455.63142999578071], out[0][1])
