@@ -10,16 +10,20 @@ from alignment import ID_base, distance_between
 class CalcDistanceStats(MRJob):
 
     """
-    TODO
+    Calculate statistics on the distance between paired alignments.
+
+    Calculates the mean and standard deviation.
     """
 
     INPUT_PROTOCOL = JSONProtocol
+
+    # necessary for returning one set of statistics.
+    # TODO there is probably a way to get around this.
     JOBCONF = {'mapreduce.job.reduces': '1'}
 
     def mapper(self, ID, alignment):
-        """
-        TODO
-        """
+        """Group alignments into pairs using read ID base."""
+
         yield ID_base(ID), alignment
 
     def reducer_init(self):
@@ -28,11 +32,9 @@ class CalcDistanceStats(MRJob):
         self.n = 0.0
 
     def reducer(self, ID_base, alignments):
-        """
-        TODO
-        """
-        alignments = list(alignments)
+        """Calculate running statistics for each alignment pair."""
 
+        alignments = list(alignments)
         for x, y in combinations(alignments, 2):
             d = distance_between(x, y)
             self.n += 1
@@ -41,6 +43,8 @@ class CalcDistanceStats(MRJob):
             self.mean = tmp
 
     def reducer_final(self):
+        """Emit statistics."""
+        
         var = self.ssr / self.n
         std = math.sqrt(var)
         yield None, (self.mean, std)

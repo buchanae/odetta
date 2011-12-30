@@ -6,7 +6,20 @@ from alignment import parse_splat
 class SplitSplat(MRJob):
 
     """
-    TODO
+    Split Splat records into multiple records with one read per record.
+
+    Splat records contain multiple read IDs i.e. one-to-many.
+    We need to work with read IDs individually i.e. one-to-one.
+    This converts one-to-many -> one-to-one.
+
+    For example, given...
+
+      SplatDataA, Read1,Read2,Read3
+
+    ...this will emit...
+      Read1 SplatDataA
+      Read2 SplatDataA
+      Read3 SplatDataA
     """
 
     def mapper(self, key, line):

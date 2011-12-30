@@ -1,4 +1,9 @@
 def ID_base(ID):
+    """
+    Return the base of a read ID.
+
+    For example, given read ID "Foo\1" the base is "Foo".
+    """
     return ID.split('\\')[0]
 
 
@@ -12,6 +17,8 @@ def distance_between(a, b):
 
 
 def parse_SAM(raw):
+    """Parse a SAM formatted string.  Return a dictionary."""
+
     data = {}
     fields = raw.split('\t')
 
@@ -32,6 +39,8 @@ def parse_SAM(raw):
 
 
 def parse_splat(raw):
+    """Parse a Splat formatted string.  Return a dictionary."""
+
     data = {}
     fields = raw.split('\t')
 
