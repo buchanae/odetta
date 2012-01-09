@@ -17,7 +17,8 @@ Using a [virtualenv](http://pypi.python.org/pypi/virtualenv) is recommended, of 
 
 Using Odetta might look like this...
 
-1.  Parse a SAM-formatted file, filter out alignments that are part of a complete pair.
+1.  Parse a [SAM-formatted](http://http://samtools.sourceforge.net/) file, 
+    filter out alignments that are part of a complete pair.
 
     ```python filter_complete_pair.py alignments.sam > incomplete_pairs.json```
 

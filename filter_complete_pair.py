@@ -18,8 +18,8 @@ class FilterCompletePair(MRJob):
       C = Bar\1
 
     ...A + B make a complete pair.  C is an incomplete pair.
-    So C would be returned by default.  Given the --invert option,
-    A and B would be returned.
+    By default, C would be returned.
+    Given the --invert option, A and B would be returned.
     """
 
     def configure_options(self):
