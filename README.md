@@ -27,7 +27,7 @@ Using Odetta might look like this...
     ```python split_splat.py splats.splat > split_splats.json```
 
 3.  Filter the data from the previous two steps with criteria for valid pairs,
-    including chromosome, strand, distance, etc.
+    including reference, strand, distance, etc.
 
     ```python filter_invalid_pairs.py --min-distance 100 --max-distance 1000 
        incomplete_pairs.json split_splats.json > valid_splats.json```

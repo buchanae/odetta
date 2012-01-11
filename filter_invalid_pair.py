@@ -1,15 +1,13 @@
-from itertools import combinations
-
 from mrjob.job import MRJob
 from mrjob.protocol import JSONProtocol
 
-from alignment import ID_base, distance_between
+from utils import distance_between
 
 
 class FilterInvalidPair(MRJob):
 
     """
-    Filter paired alignments on a set of criteria including distance, strand, etc.
+    Filter alignment pairs on a set of criteria including distance, strand, etc.
 
     --min-distance and --max-distance command-line options configure allowed distance.
     By default, any distance is allowed.
@@ -26,43 +24,22 @@ class FilterInvalidPair(MRJob):
         self.add_passthrough_option('--max-distance', action='store',
                                     type=float, default=float('inf'))
 
-    def mapper(self, ID, alignment):
-        """Group alignments by read ID base."""
 
-        yield ID_base(ID), (ID, alignment)
-
-    def reducer(self, ID_base, alignments):
+    def mapper(self, key, pair):
         """
-        Make alignment pairs and filter. Emit valid alignments individually.
-        
-        Only Splat alignments are returned, CashX alignments are not.
-
-        Valid alignments must have...
-          - the same chromosome
+        Valid pairs must have...
+          - the same reference
           - opposite strands
-          - a distance between them within the given bounds.
+          - a distance between them within the given bounds
         """
 
-        valid = set()
-        alignments = list(alignments)
+        x, y = pair
+        if x['reference'] == y['reference'] and x['strand'] != y['strand']:
 
-        for ix, iy in combinations(xrange(len(alignments)), 2):
-            x = alignments[ix][1]
-            y = alignments[iy][1]
+            d = distance_between(x, y)
+            if d >= self.options.min_distance and d <= self.options.max_distance:
 
-            if x['chromosome'] == y['chromosome'] and x['strand'] != y['strand']:
-
-                d = distance_between(x, y)
-                if d >= self.options.min_distance and d <= self.options.max_distance:
-
-                    if x['type'] == 'splat':
-                        valid.add(ix)
-
-                    if y['type'] == 'splat':
-                        valid.add(iy)
-
-        for iv in valid:
-            yield alignments[iv][0], alignments[iv][1]
+                yield key, pair
 
 
 if __name__ == '__main__':
