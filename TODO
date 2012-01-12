@@ -1,1 +1,14 @@
-move jobs to jobs.py?
+setup venv for odetta on pseudo0
+
+generated docs
+
+a way to run jobs now that they've moved to jobs/foo.py
+
+a way to run the entire pipeline
+
+
+weighted coverage
+
+
+jobs for running cashx, splat, stack, gmb?
+  probably need to run file split before splat

@@ -1,6 +1,6 @@
 from nose.tools import eq_
 
-from alignment import *
+from utils import *
 
 
 def test_ID_base():
