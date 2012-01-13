@@ -1,0 +1,3 @@
+foo	16	Chr1	15	0	CIGAR	*	0	0	ATCG	*
+bar	0	Chr2	15	0	CIGAR	*	0	0	ATCG	*
+baz	16	Chr3	15	0	CIGAR	*	0	0	ATCG	*

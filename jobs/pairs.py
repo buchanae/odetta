@@ -1,13 +1,14 @@
 from collections import Counter
 import math
 
-import mrjob
+from mrjob.job import MRJob
+from mrjob.protocol import JSONProtocol
 
 
-class PairJob(mrjob.job.MRJob):
+class PairJob(MRJob):
     """TODO"""
 
-    INPUT_PROTOCOL = mrjob.protocol.JSONProtocol
+    INPUT_PROTOCOL = JSONProtocol
 
 
 class DistanceStatistics(PairJob):

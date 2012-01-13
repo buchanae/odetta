@@ -1,29 +1,10 @@
-import logging
-
 from nose.tools import eq_
 import mrjob
 
-from calc_distance_stats import CalcDistanceStats
-from combine_splats import CombineSplats
-from filter_complete_pair import FilterCompletePair
-from filter_invalid_pair import FilterInvalidPair
-from split_splat import SplitSplat
+from base import JobTest
+import files
+import jobs
 
-import test_files as tf
-
-
-# disable mrjob loggers
-logging.getLogger('mrjob.local').setLevel(100)
-logging.getLogger('mrjob.runner').setLevel(100)
-logging.getLogger('mrjob.conf').setLevel(100)
-
-
-def test_split_splat():
-    f = open(tf.path('splat'))
-    j = SplitSplat().sandbox(f)
-    j.run_job()
-    out = j.parse_output()
-    eq_(['bas', 'baz', 'foo'], sorted([x[0] for x in out]))
 
 def test_filter_complete_pair():
     f = open(tf.path('filter_complete.sam'))

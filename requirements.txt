@@ -6,4 +6,4 @@ nose==1.1.2
 rtree==0.7.0
 biopython==1.58
 
--e git://github.com/abuchanan/gff.git#egg=gff
+git+http://github.com/abuchanan/gff.git
