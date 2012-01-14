@@ -2,7 +2,7 @@ from nose.tools import eq_, ok_
 
 from jobs.parse import *
 from jobs.parse.util import model
-from tests import filepath, disable_mrjob_loggers
+from tests import dummy, disable_mrjob_loggers
 
 
 disable_mrjob_loggers()
@@ -22,7 +22,7 @@ def test_model():
 
 
 def test_SAM():
-    f = filepath('sam')
+    f = dummy('sam')
     j = SAM().sandbox(f)
     j.run_job()
     out = dict((x[1]['ID'], x) for x in j.parse_output())
@@ -42,7 +42,7 @@ def test_SAM():
 
 
 def test_SAM_type():
-    f = filepath('sam')
+    f = dummy('sam')
     j = SAM(args=['--type', 'blah']).sandbox(f)
     j.run_job()
     out = j.parse_output()
@@ -52,7 +52,7 @@ def test_SAM_type():
 
 
 def test_Splat():
-    f = filepath('splat')
+    f = dummy('splat')
     j = Splat().sandbox(f)
     j.run_job()
     out = j.parse_output()
@@ -76,7 +76,7 @@ def test_Splat():
     eq_('+', v['strand'])
 
 def test_SplitSplat():
-    f = filepath('splat')
+    f = dummy('splat')
     j = SplitSplat().sandbox(f)
     j.run_job()
     out = j.parse_output()

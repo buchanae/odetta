@@ -3,8 +3,8 @@ import os.path
 import unittest
 
 
-def filepath(name):
-    return open(os.path.join(os.path.dirname(__file__), 'files', name))
+def dummy(name):
+    return open(os.path.join(os.path.dirname(__file__), 'dummies', name))
 
 
 def disable_mrjob_loggers():
