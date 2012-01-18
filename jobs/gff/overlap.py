@@ -1,46 +1,103 @@
+from itertools import ifilter
+
+from mrjob.job import MRJob
+from mrjob.protocol import RawValueProtocol
 #TODO maybe make rtree optional and fall back on pyrtree?
 import rtree
 
-from base import GFFJob
+from feature import Feature
 
 
-class Overlap(GFFJob):
+def calc_overlap(a, b):
     """TODO"""
 
-    # TODO not easy to distribute because every job needs a complete reference tree,
-    # which could be costly to build.  can build once and distibute to all?
-    # maybe could prebuilt, serialized rtree?
-    JOBCONF = {'mapreduce.job.maps': '1'}
+    if b.end < a.start or b.start > a.end: return 0
+    start = a.start if a.start > b.start else b.start
+    end = a.end if a.end < b.end else b.end
+    return (end - start + 1) / b.length
+
+
+class Overlap(MRJob):
+
+    """TODO"""
 
     def configure_options(self):
         """Define command-line options."""
 
         super(Overlap, self).configure_options()
-        #TODO reference gff path
-        # will this error if not passed?
         # TODO check that file can be opened
-        # TODO need to use add_file_option
-        self.add_passthrough_option('--reference', action='store', type=string)
+
+        # TODO --rtree
+        # self.add_file_option('--rtree', help='TODO')
+
+        self.add_file_option('--reference', help='TODO')
+
+        self.add_passthrough_option('--min-overlap', type=float, default=float('-inf'),
+            help='TODO')
+        self.add_passthrough_option('--max-overlap', type=float, default=float('inf'),
+            help='TODO')
+
+        self.add_passthrough_option('--min-overlap-count', type=float, 
+            default=float('-inf'), help='TODO')
+        self.add_passthrough_option('--max-overlap-count', type=float, 
+            default=float('inf'), help='TODO')
+
 
     def mapper_init(self):
         """TODO"""
 
-        self.idx = rtree.index.Index()
-        for i, f in enumerate(gff.reader(self.options.reference)):
-            
-            if f.type == 'mRNA':
-                idx.insert(i, (f.start, 0, f.end, 0), obj=f)
+        self.refs = []
+        r = ifilter(lambda x: x.type == 'mRNA', Feature.from_file(self.options.reference))
+        def generator_function():
+            for i, f in enumerate(r):
+                if f.type == 'mRNA':
 
-    def mapper(self, key, value):
+                    try:
+                        ref_i = self.refs.index(f.seqid)
+                    except ValueError:
+                        ref_i = len(self.refs)
+                        self.ref.append(f.seqid)
+
+                    yield (i, (f.start, ref_i, f.end, ref_i), f)
+
+        self.rtree = rtree.index.Index(generator_function())
+
+
+    def search(self, f):
         """TODO"""
 
-        f = self.parse_line(value)
+        try:
+            ref_i = self.refs.index(f.seqid)
+        except ValueError:
+            return []
 
-        if f.type == 'mRNA':
-            #TODO useful output
-            #TODO calculate amount of overlap and allow filtering on that
-            #[n.object for n in idx.intersection((left, bottom, right, top), objects=True)]
-            yield f, list(self.idx.intersection((f.start, 0, f.end, 0)))
+        o = self.rtree.intersection((f.start, ref_i, f.end, ref_i), objects=True)
+        return [n.object for n in o]
+
+
+    def mapper(self, key, line):
+        """TODO"""
+
+        try:
+            f = Feature.from_string(line)
+
+            if f.type == 'mRNA':
+                overlaps = self.search(f)
+
+                if len(overlaps) >= self.options.min_overlap_count and \
+                   len(overlaps) <= self.options.max_overlap_count: 
+
+                    for o in overlaps:
+                        amt = calc_overlap(o, f)
+                        if amt >= self.options.min_overlap and \
+                           amt <= self.options.max_overlap:
+
+                            f.attributes['Parent'] = o.ID
+                            yield None, f
+
+        except Feature.ParseError:
+            pass
+
 
 
 if __name__ == '__main__':
