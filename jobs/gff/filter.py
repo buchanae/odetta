@@ -1,9 +1,10 @@
 import json
 import math
 
-from mrjob.protocol import PickleProtocol
+from mrjob.job import MRJob
+from mrjob.protocol import PickleProtocol, RawValueProtocol
 
-from base import GFFJob
+from feature import Feature
 
 
 def calc_coverage(hits, total, length):
@@ -12,11 +13,12 @@ def calc_coverage(hits, total, length):
     return (math.pow(10, 9) * hits) / (total * length)
 
 
-class Filter(GFFJob):
+class Filter(MRJob):
 
     """TODO"""
 
     INTERNAL_PROTOCOL = PickleProtocol
+    OUTPUT_PROTOCOL = RawValueProtocol
 
     def configure_options(self):
         """Define command-line options."""
@@ -42,15 +44,21 @@ class Filter(GFFJob):
         self.add_passthrough_option('--max-exons', type=float, default=float('inf'),
             help='TODO')
 
-    def mapper(self, key, value):
+    def mapper(self, key, line):
         """TODO"""
 
-        f = self.parse_line(value)
+        try:
+            f = Feature.from_string(line)
 
-        if f.type == 'mRNA':
-            yield f.attributes['ID'], f
-        elif f.type == 'exon':
-            yield f.attributes['Parent'], f
+            if f.type == 'mRNA':
+                yield f.ID, f
+
+            elif f.type == 'exon':
+                for parent in f.parents:
+                    yield parent, f
+
+        except Feature.ParseError:
+            pass
 
     def reducer_init(self):
         self.total = 0

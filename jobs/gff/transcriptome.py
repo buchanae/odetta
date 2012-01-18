@@ -1,34 +1,38 @@
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from mrjob.protocol import PickleProtocol
+from mrjob.job import MRJob
+from mrjob.protocol import PickleProtocol, RawValueProtocol
 
-from base import GFFJob
+from feature import Feature
 
 
-class Transcriptome(GFFJob):
+class Transcriptome(MRJob):
 
-    """
-    """
+    """TODO"""
 
     INTERNAL_PROTOCOL = PickleProtocol
+    OUTPUT_PROTOCOL = RawValueProtocol
 
     def configure_options(self):
         """Define command-line options."""
 
         super(Transcriptome, self).configure_options()
-        #TODO genome fasta file path
-        # how best to distribute this file to workers?
-        # will this error if not passed?
-        # TODO need to use add_file_option
+        #TODO will this error if not passed?
         self.add_file_option('--genome', help='TODO')
 
-    def mapper(self, key, value):
+    def mapper(self, key, line):
         """TODO"""
 
-        f = self.parse_line(value)
-        if f.type == 'exon':
-            yield f.attributes['Parent'], f
+        try:
+            f = Feature.from_string(line)
+
+            if f.type == 'exon':
+                for parent in f.parents:
+                    yield parent, f
+
+        except Feature.ParseError:
+            pass
 
     def reducer_init(self):
         self.genome = {}
