@@ -1,6 +1,11 @@
 # Odetta
 
-Odetta contains tools for filtering paired-end Splat alignments.
+Odetta is a set of tools for discovering and analyzing novel transcript isoforms using paired-end RNA-Seq data.
+
+External software is used at various points in the pipeline:
+* CASHX is used for sequence alignment.
+* multisplat is used to discover splice junctions.
+* GMB is used to discover novel gene models.
 
 
 ## Installation
@@ -10,6 +15,8 @@ Odetta contains tools for filtering paired-end Splat alignments.
 Odetta requires a couple python packages, [mrjob](http://packages.python.org/mrjob/) 
 and [nose](http://readthedocs.org/docs/nose/).
 
+TODO note about rtree
+
 Using a [virtualenv](http://pypi.python.org/pypi/virtualenv) is recommended, of course.
 
 
@@ -17,25 +24,7 @@ Using a [virtualenv](http://pypi.python.org/pypi/virtualenv) is recommended, of 
 
 Using Odetta might look like this...
 
-1.  Parse a [SAM-formatted](http://http://samtools.sourceforge.net/) file, 
-    filter out alignments that are part of a complete pair.
-
-    ```python filter_complete_pair.py alignments.sam > incomplete_pairs.json```
-
-2.  Parse a Splat-formatted file, splitting read IDs into individual alignments.
-
-    ```python split_splat.py splats.splat > split_splats.json```
-
-3.  Filter the data from the previous two steps with criteria for valid pairs,
-    including reference, strand, distance, etc.
-
-    ```python filter_invalid_pairs.py --min-distance 100 --max-distance 1000 
-       incomplete_pairs.json split_splats.json > valid_splats.json```
-
-4.  Combine the valid splats from the previous step, outputting a Splat-formatted file.
-
-    ```python combine_splats.py valid_splats.json > valid.splat```
-
+TODO
 
 ## Configuration
 

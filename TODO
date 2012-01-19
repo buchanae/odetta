@@ -1,9 +1,17 @@
+update README
+
+merge gmb -> master
+
 installation on pseudo0
+
+way to track timing/perf of test run
 
 generated docs
 
 a way to run the entire pipeline
 
+code comments
+cli parameter help
 
 weighted coverage
 
@@ -13,6 +21,7 @@ jobs for running cashx, splat, stack, gmb?
 
 
 fix splat strand output to +/-
+  test this on pseudo0
 
 
 model-tidy, given multiple gff files, output one that's been cleaned up
