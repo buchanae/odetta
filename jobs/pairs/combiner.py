@@ -10,14 +10,6 @@ class Combiner(MRJob):
 
     """
     TODO update
-
-    For example, given...
-
-      A = Foo\1
-      B = Foo\2
-      C = Bar\1
-
-    ...A + B make a complete pair.  C is an incomplete pair.
     """
 
     INPUT_PROTOCOL = JSONProtocol

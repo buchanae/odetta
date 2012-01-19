@@ -2,8 +2,6 @@ installation on pseudo0
 
 generated docs
 
-need to bring back filter imcomplete pair job?
-
 a way to run the entire pipeline
 
 
@@ -22,3 +20,18 @@ model-tidy, given multiple gff files, output one that's been cleaned up
   - related features are grouped
   - invalid lines are removed
   - genes with no mRNA children are removed
+
+
+test funcs run job code could be abstracted slightly
+    f = dummy('filename')
+    j = JobClass(args=[]).sandbox(f)
+    j.run_job()
+    out = j.parse_output()
+
+    to
+
+    out = test_job(JobClass, 'filename', args)
+
+    def test_job():
+        ...
+        return j.parse_output(JobClass.OUTPUT_PROTOCOL)

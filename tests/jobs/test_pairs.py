@@ -82,3 +82,19 @@ def test_combiner():
     j.run_job()
     out = j.parse_output()
     eq_([(1, 3), (2, 3), (5, 6)], sorted([(x[1][0]['n'], x[1][1]['n']) for x in out]))
+
+
+def test_incomplete_filter():
+    f = dummy('incomplete_filter')
+    j = IncompleteFilter().sandbox(f)
+    j.run_job()
+    out = j.parse_output()
+    eq_(['baz\\1'], sorted([x[1]['ID'] for x in out]))
+
+
+def test_incomplete_filter_inverted():
+    f = dummy('incomplete_filter')
+    j = IncompleteFilter(args=['--invert']).sandbox(f)
+    j.run_job()
+    out = j.parse_output()
+    eq_(['bar\\1', 'bar\\2', 'foo\\1', 'foo\\2'], sorted([x[1]['ID'] for x in out]))
