@@ -1,8 +1,8 @@
-setup venv for odetta on pseudo0
+installation on pseudo0
 
 generated docs
 
-a way to run jobs now that they've moved to jobs/foo.py
+need to bring back filter imcomplete pair job?
 
 a way to run the entire pipeline
 
@@ -15,3 +15,10 @@ jobs for running cashx, splat, stack, gmb?
 
 
 fix splat strand output to +/-
+
+
+model-tidy, given multiple gff files, output one that's been cleaned up
+  - detect and resolve duplicate IDs (by appending -N)
+  - related features are grouped
+  - invalid lines are removed
+  - genes with no mRNA children are removed

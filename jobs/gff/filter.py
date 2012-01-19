@@ -67,9 +67,8 @@ class Filter(MRJob):
         if self.options.counts:
             for line in open(self.options.counts):
                 ref_name, counts_json = line.strip().split('\t')
-                ref_total, counts = json.loads(counts_json)
-                # TODO could remove total from output and calc from sum(counts.values())
-                self.total += ref_total
+                counts = json.loads(counts_json)
+                self.total += sum(counts.values())
                 self.counts[ref_name] = counts
 
     def reducer(self, ID, features):

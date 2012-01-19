@@ -1,0 +1,4 @@
+""	[{"reference": "ChrC", "ID": "foo\\2"},{"reference": "ChrC", "ID": "foo\\1"}]
+""	[{"reference": "ChrD", "ID": "bar\\1"},{"reference": "ChrD", "ID": "bar\\2"}]
+""	[{"reference": "ChrC", "ID": "foo\\1"},{"reference": "ChrC", "ID": "foo\\2"}]
+""	[{"reference": "ChrE", "ID": "bar\\1"},{"reference": "ChrE", "ID": "bar\\2"}]

@@ -1,8 +1,7 @@
-"bas"	{"start": 1, "end": 50, "strand": "-1", "chromosome": "ChrC", "type": "splat"}
-"bas"	{"start": 150, "end": 250, "strand": "1", "chromosome": "ChrC", "type": "sam"}
-"bar"	{"start": 1000, "end": 1050, "strand": "-1", "chromosome": "ChrC", "type": "splat"}
-"bar"	{"start": 2050, "end": 3050, "strand": "1", "chromosome": "ChrC", "type": "sam"}
-"bat"	{"start": 1, "end": 50, "strand": "-1", "chromosome": "ChrC", "type": "splat"}
-"bat"	{"start": 149, "end": 250, "strand": "1", "chromosome": "ChrC", "type": "sam"}
-"baz"	{"start": 1000, "end": 1050, "strand": "-1", "chromosome": "ChrC", "type": "splat"}
-"baz"	{"start": 2051, "end": 3050, "strand": "1", "chromosome": "ChrC", "type": "sam"}
+"bas"	[{"start": 1, "end": 50, "strand": "-1", "reference": "ChrC", "type": "splat"},{"start": 150, "end": 250, "strand": "1", "reference": "ChrC", "type": "sam"}]
+
+"bar"	[{"start": 1000, "end": 1050, "strand": "-1", "reference": "ChrC", "type": "splat"},{"start": 2050, "end": 3050, "strand": "1", "reference": "ChrC", "type": "sam"}]
+
+"bat"	[{"start": 1, "end": 50, "strand": "-1", "reference": "ChrC", "type": "splat"},{"start": 149, "end": 250, "strand": "1", "reference": "ChrC", "type": "sam"}]
+
+"baz"	[{"start": 1000, "end": 1050, "strand": "-1", "reference": "ChrC", "type": "splat"},{"start": 2051, "end": 3050, "strand": "1", "reference": "ChrC", "type": "sam"}]

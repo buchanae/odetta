@@ -7,6 +7,7 @@ def test_ID_base():
     eq_('foo', ID_base('foo\\1'))
     eq_('foo', ID_base('foo'))
 
+
 def test_distance_between():
     class Alignment(object):
         def __init__(self, start, end):
