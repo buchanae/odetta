@@ -1,7 +1,7 @@
 from mrjob.job import MRJob
 from mrjob.protocol import JSONProtocol
 
-from utils import distance_between
+from odetta.utils import distance_between
 
 
 class ValidFilter(MRJob):

@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+import shlex
+import shutil
+import subprocess
+import sys
+
+import odetta
+import odetta.jobs
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('command', choices=['makefile', 'run'], help='TODO')
+parser.add_argument('args', nargs=argparse.REMAINDER, help='TODO')
+
+run_parser = argparse.ArgumentParser()
+run_parser.add_argument('job', help='TODO')
+
+mf_parser = argparse.ArgumentParser()
+mf_parser.add_argument('--name')
+
+#TODO add job list to cli help
+
+if __name__ == '__main__':
+    args = parser.parse_args()
+
+    if args.command == 'run':
+        run_args, job_args = run_parser.parse_known_args(args.args)
+
+        if run_args.job in odetta.jobs.names:
+            job_cls = odetta.jobs.names[run_args.job]
+            subprocess.call(['python', job_cls.mr_job_script()] + job_args)
+        else:
+            sys.exit('Error: unknown job')
+            #TODO would be useful to print job list here
+
+    elif args.command == 'makefile':
+        mf_args = mf_parser.parse_args(args.args)
+        name = mf_args.name if mf_args.name else 'Makefile'
+        shutil.copy(odetta.makefile, name)
+        print 'Created {}'.format(os.path.abspath(name))

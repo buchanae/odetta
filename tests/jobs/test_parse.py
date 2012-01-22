@@ -21,6 +21,8 @@ def test_model():
     eq_('d', b['three'])
 
 
+#TODO test SAM with many extra columns
+
 def test_SAM():
     f = dummy('sam')
     j = SAM().sandbox(f)

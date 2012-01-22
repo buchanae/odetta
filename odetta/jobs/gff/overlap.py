@@ -27,11 +27,11 @@ class Overlap(MRJob):
         super(Overlap, self).configure_options()
         # TODO check that file can be opened
 
-        # TODO --rtree
-        # self.add_file_option('--rtree', help='TODO')
+        # TODO self.add_file_option('--rtree', help='TODO')
 
         self.add_file_option('--reference', help='TODO')
 
+        #TODO unit tests for these options
         self.add_passthrough_option('--min-overlap', type=float, default=float('-inf'),
             help='TODO')
         self.add_passthrough_option('--max-overlap', type=float, default=float('inf'),

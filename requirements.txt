@@ -1,9 +1,0 @@
-# This file lists required packages.
-# pip can use this file to install these packages.
-
-mrjob==0.3.1
-nose==1.1.2
-rtree==0.7.0
-biopython==1.58
-
-git+http://github.com/abuchanan/gff.git
