@@ -35,6 +35,7 @@ class Bowtie(MRJob):
 
         data['start'] += 1
         data['end'] = data['start'] + len(data['sequence'])
+        del data['sequence']
 
         yield None, data
 
