@@ -2,7 +2,7 @@ from tempfile import NamedTemporaryFile
 
 from nose.tools import eq_, ok_
 
-from jobs.gff.transcriptome import Transcriptome
+from odetta.jobs.gff.transcriptome import Transcriptome
 from tests import dummy, disable_mrjob_loggers
 
 
@@ -30,7 +30,7 @@ def test_Transcriptome_load_genome():
     eq_(2, len(j.genome))
     ok_('Chr1' in j.genome)
     ok_('Chr2' in j.genome)
-    eq_('ATCGTGCTAGTCTGATGCATTGGTATG', str(j.genome['Chr1'].seq))
+    eq_('ATCGTGCTAGTCTGATGCATTGGTATG', str(j.genome['Chr1']))
 
 
 def test_Transcriptome():

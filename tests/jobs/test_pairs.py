@@ -1,6 +1,6 @@
 from nose.tools import eq_, ok_
 
-from jobs.pairs import *
+from odetta.jobs.pairs import *
 from tests import dummy, disable_mrjob_loggers
 
 

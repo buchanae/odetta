@@ -1,7 +1,7 @@
 from mrjob.job import MRJob
 from mrjob.protocol import JSONProtocol
 
-from ...utils import ID_base
+from odetta.utils import ID_base
 
 
 class IncompleteFilter(MRJob):

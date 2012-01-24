@@ -1,6 +1,6 @@
 from nose.tools import eq_, ok_
 
-from jobs.gff.feature import Feature
+from odetta.jobs.gff.feature import Feature
 
 
 

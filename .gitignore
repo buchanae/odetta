@@ -1,1 +1,3 @@
 mrjob.conf
+*.flat
+*.gdx

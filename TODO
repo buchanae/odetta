@@ -1,23 +1,15 @@
 update README
 
-merge gmb -> master
-
 installation on pseudo0
 
 way to track timing/perf of test run
 
 generated docs
 
-a way to run the entire pipeline
-
 code comments
 cli parameter help
 
 weighted coverage
-
-
-jobs for running cashx, splat, stack, gmb?
-  probably need to run file split before splat
 
 
 fix splat strand output to +/-
@@ -44,3 +36,15 @@ test funcs run job code could be abstracted slightly
     def test_job():
         ...
         return j.parse_output(JobClass.OUTPUT_PROTOCOL)
+
+init: foo
+    TODO add virtualenv to odetta, or maybe just wget
+    wget https://raw.github.com/pypa/virtualenv/master/virtualenv.py
+
+    $(PYTHON) virtualenv.py venv
+    detect shell and source appropriately
+      source venv/bin/activate.csh
+
+    setenv LD_LIBRARY_PATH /pseudospace1/buchanae/spatialindexlib/lib:$LD_LIBRARY_PATH
+
+    ./venv/bin/nosetests-2.7 tests/

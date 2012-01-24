@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from nose.tools import eq_, ok_
 
-from jobs.gff.filter import calc_coverage, Filter
+from odetta.jobs.gff.filter import calc_coverage, Filter
 from tests import dummy, disable_mrjob_loggers
 
 

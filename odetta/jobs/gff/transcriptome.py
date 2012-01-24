@@ -1,10 +1,15 @@
-from Bio import SeqIO
-from Bio.Seq import Seq
-from Bio.SeqRecord import SeqRecord
 from mrjob.job import MRJob
 from mrjob.protocol import PickleProtocol, RawValueProtocol
+from pyfasta import Fasta
 
 from feature import Feature
+
+
+def chunks(l, n):
+    """ Yield successive n-sized chunks from l.
+    """
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]
 
 
 class Transcriptome(MRJob):
@@ -35,18 +40,17 @@ class Transcriptome(MRJob):
             pass
 
     def reducer_init(self):
-        self.genome = {}
-        for record in SeqIO.parse(self.options.genome, 'fasta'):
-            self.genome[record.id] = record
+        self.genome = Fasta(self.options.genome)
 
     def reducer(self, mRNA_ID, exons):
         """TODO"""
 
-        seq = Seq('')
+        seq = ''
         for exon in sorted(exons, key=lambda f: f.start):
-            seq += self.genome[exon.seqid].seq[exon.start - 1:exon.end]
+            seq += self.genome[exon.seqid][exon.start - 1:exon.end]
 
-        yield None, SeqRecord(id=mRNA_ID, seq=seq, description='').format('fasta')
+        header = '>{}'.format(mRNA_ID)
+        yield None, '\n'.join([header] + list(chunks(seq, 70)))
 
 
 if __name__ == '__main__':

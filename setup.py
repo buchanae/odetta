@@ -5,7 +5,7 @@ try:
         'install_requires': [
             'mrjob',
             'rtree',
-            'biopython',
+            'pyfasta',
             'gff',
         ],
         'dependency_links': [

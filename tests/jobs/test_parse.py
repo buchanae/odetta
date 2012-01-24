@@ -1,7 +1,7 @@
 from nose.tools import eq_, ok_
 
-from jobs.parse import *
-from jobs.parse.util import model
+from odetta.jobs.parse import *
+from odetta.jobs.parse.util import model
 from tests import dummy, disable_mrjob_loggers
 
 
