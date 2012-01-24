@@ -9,7 +9,6 @@ names = {
     'gff.transcriptome': gff.Transcriptome,
     'pairs.combiner': pairs.Combiner,
     'pairs.distance-statistics': pairs.DistanceStatistics,
-    'pairs.incomplete-filter': pairs.IncompleteFilter,
     'pairs.reference-counts': pairs.ReferenceCounts,
     'pairs.to-splat': pairs.ToSplat,
     'pairs.unambiguous-filter': pairs.UnambiguousFilter,

@@ -8,7 +8,7 @@ SPLIT_SIZE = 25000000
 
 TIME = /usr/bin/time --output=times --append
 ODETTA = $(TIME) odetta
-BOWTIE_BUILD = $(TIME) bowtie-build --offrate 1
+BOWTIE_BUILD = $(TIME) bowtie-build --offrate 1 --quiet
 BOWTIE = $(TIME) bowtie -f -p 8 -v 0 --suppress 6,7,8 --all
 SUPERSPLAT = $(TIME) /path/to/multisplat
 
@@ -28,22 +28,19 @@ $(GENOME_EBWT) : $(GENOME_FASTA)
 unaligned.fasta aligned.bowtie : $(GENOME_EBWT)
 		$(BOWTIE) --un unaligned.fasta genome $(READS) aligned.bowtie
 
-split-unaligned-% : unaligned.fasta
+split-unaligned : unaligned.fasta
 		split --lines=$(SPLIT_SIZE) unaligned.fasta split-unaligned-
+		touch split-unaligned
 
-splat.json : split-unaliged-*
-		for file in split-unaligned-*; do \
-		    $(SPLAT) -f $$file -r $(GENOME_FASTA) ; \
-		done
+splat-unaligned : split-unaligned-*
+		$(SPLAT) -f $? -r $(GENOME_FASTA)
+		touch splat-unaligned
 		
-		$(JOB) parse.split-splat *.supersplat > splat.json
-		rm -f *.supersplat
+splat.json : *.supersplat
+		$(JOB) parse.split-splat $^ > splat.json
 
 aligned.json : aligned.bowtie
 		$(JOB) parse.bowtie aligned.bowtie > aligned.json
-
-incomplete.json : aligned.json
-		$(JOB) pairs.incomplete-filter aligned.json > incomplete.json
 
 pairs.json : splat.json aligned.json
 		$(JOB) pairs.combiner splat.json aligned.json > pairs.json

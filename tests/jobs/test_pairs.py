@@ -58,13 +58,3 @@ def test_reference_counts(out):
 @dummytest(Combiner(), 'combiner')
 def test_combiner(out):
     eq_([(1, 3), (2, 3), (5, 6)], sorted([(x[1][0]['n'], x[1][1]['n']) for x in out]))
-
-
-@dummytest(IncompleteFilter(), 'incomplete_filter')
-def test_incomplete_filter(out):
-    eq_(['baz\\1'], sorted([x[1]['ID'] for x in out]))
-
-
-@dummytest(IncompleteFilter(args=['--invert']), 'incomplete_filter')
-def test_incomplete_filter_inverted(out):
-    eq_(['bar\\1', 'bar\\2', 'foo\\1', 'foo\\2'], sorted([x[1]['ID'] for x in out]))
