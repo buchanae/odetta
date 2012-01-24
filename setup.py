@@ -6,7 +6,10 @@ try:
             'mrjob',
             'rtree',
             'biopython',
-            #'git+http://github.com/abuchanan/gff.git',
+            'gff',
+        ],
+        'dependency_links': [
+            'http://github.com/abuchanan/gff/tarball/master#egg=gff-0.1',
         ],
         'provides': ['odetta'],
         'tests_require': ['nose'],
