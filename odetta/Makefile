@@ -49,7 +49,7 @@ pairs.json : splat.json incomplete.json
 pairs-stats.json : pairs.json
 		$(JOB) pairs.distance-statistics pairs.json > pairs-stats.json
 
-valid.json : pairs.json:
+valid.json : pairs.json
 		$(JOB) pairs.valid-filter pairs.json > valid.json
 
 valid.splat : valid.json
