@@ -6,7 +6,7 @@ MIN_MRNA_LENGTH = 1000
 READS = reads/*.fasta
 SPLIT_SIZE = 25000000
 
-TIME = 
+TIME = time
 ODETTA = odetta
 BOWTIE_BUILD = $(TIME) bowtie-build --offrate 1
 BOWTIE = $(TIME) bowtie -f -p 8 -v 0 --suppress 6,7,8
