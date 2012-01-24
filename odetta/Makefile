@@ -6,35 +6,37 @@ MIN_MRNA_LENGTH = 1000
 READS = reads/*.fasta
 SPLIT_SIZE = 25000000
 
-TIME = time
-ODETTA = odetta
+TIME = /usr/bin/time --output=times --append
+ODETTA = $(TIME) odetta
 BOWTIE_BUILD = $(TIME) bowtie-build --offrate 1
-BOWTIE = $(TIME) bowtie -f -p 8 -v 0 --suppress 6,7,8
-JOB = $(TIME) $(ODETTA) run 
+BOWTIE = $(TIME) bowtie -f -p 8 -v 0 --suppress 6,7,8 --all
 SUPERSPLAT = $(TIME) /path/to/multisplat
+
+JOB = $(ODETTA) run 
 SPLAT = $(SUPERSPLAT) splat -t 8 -n 1000 -x 5000 -c 40 -i 41 -S 1
 STACK = $(SUPERSPLAT) stack -n 1 -c 1
 
 
-GENOME_EWBT = genome.1.ewbt genome.2.ewbt genome.3.ewbt \
-              genome.4.ewbt genome.rev.1.ewbt genome.rev.2.ewbt
+GENOME_EBWT = genome.1.ebwt genome.2.ebwt genome.3.ebwt \
+              genome.4.ebwt genome.rev.1.ebwt genome.rev.2.ebwt
 
 all : overlap.gff
 
-$(GENOME_EWBT) : $(GENOME_FASTA)
+$(GENOME_EBWT) : $(GENOME_FASTA)
 		$(BOWTIE_BUILD) $(GENOME_FASTA) genome
 
-unaligned.fasta aligned.bowtie : $(GENOME_EWBT)
-		$(BOWTIE) --un unaligned.fasta -a aligned.bowtie $(READS) genome
+unaligned.fasta aligned.bowtie : $(GENOME_EBWT)
+		$(BOWTIE) --un unaligned.fasta genome $(READS) aligned.bowtie
 
-splat.json : unaligned.fasta
+split-unaligned-% : unaligned.fasta
 		split --lines=$(SPLIT_SIZE) unaligned.fasta split-unaligned-
-		
+
+splat.json : split-unaliged-*
 		for file in split-unaligned-*; do \
-		    $(SPLAT) -f $$file -r $(GENOME_FASTA) 
+		    $(SPLAT) -f $$file -r $(GENOME_FASTA) ; \
 		done
 		
-		$(JOB) parse./splitsplit.py *.supersplat > splat.json
+		$(JOB) parse.split-splat *.supersplat > splat.json
 		rm -f *.supersplat
 
 aligned.json : aligned.bowtie
@@ -43,8 +45,8 @@ aligned.json : aligned.bowtie
 incomplete.json : aligned.json
 		$(JOB) pairs.incomplete-filter aligned.json > incomplete.json
 
-pairs.json : splat.json incomplete.json
-		$(JOB) pairs.combiner splat.json incomplete_cashx.json > pairs.json
+pairs.json : splat.json aligned.json
+		$(JOB) pairs.combiner splat.json aligned.json > pairs.json
 
 pairs-stats.json : pairs.json
 		$(JOB) pairs.distance-statistics pairs.json > pairs-stats.json
@@ -67,12 +69,12 @@ gmb.gff : stacks aligned.sam
 gmb.fasta : gmb.gff
 		$(JOB) gff.transcriptome --genome $(GENOME_FASTA) gmb.gff > gmb.fasta
 
-GMB_EWBT = gmb.1.ewbt gmb.2.ewbt gmb.3.ewbt gmb.4.ewbt gmb.rev.1.ewbt gmb.rev.2.ewbt 
-$(GMB_EWBT) : gmb.fasta
+GMB_EBWT = gmb.1.ebwt gmb.2.ebwt gmb.3.ebwt gmb.4.ebwt gmb.rev.1.ebwt gmb.rev.2.ebwt 
+$(GMB_EBWT) : gmb.fasta
 		$(BOWTIE_BUILD) gmb.fasta gmb
 
-gmb.bowtie : $(GMB_EWBT)
-		 $(BOWTIE) -a gmb.bowtie $(READS) gmb
+gmb.bowtie : $(GMB_EBWT)
+		 $(BOWTIE) -a gmb $(READS) gmb.bowtie
 
 gmb-aligned.json : gmb.bowtie
 		$(JOB) parse.bowtie gmb.bowtie > gmb-aligned.json
