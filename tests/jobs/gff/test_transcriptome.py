@@ -3,7 +3,7 @@ from tempfile import NamedTemporaryFile
 from nose.tools import eq_, ok_
 
 from odetta.jobs.gff.transcriptome import Transcriptome
-from tests import dummy, disable_mrjob_loggers
+from tests import *
 
 
 disable_mrjob_loggers()

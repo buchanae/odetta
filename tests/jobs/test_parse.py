@@ -2,7 +2,7 @@ from nose.tools import eq_, ok_
 
 from odetta.jobs.parse import *
 from odetta.jobs.parse.util import model
-from tests import dummy, disable_mrjob_loggers
+from tests import *
 
 
 disable_mrjob_loggers()
@@ -23,11 +23,9 @@ def test_model():
 
 #TODO test SAM with many extra columns
 
-def test_SAM():
-    f = dummy('sam')
-    j = SAM().sandbox(f)
-    j.run_job()
-    out = dict((x[1]['ID'], x) for x in j.parse_output())
+@dummytest(SAM(), 'sam')
+def test_SAM(out):
+    out = dict((x[1]['ID'], x) for x in out)
 
     eq_(3, len(out))
 
@@ -43,22 +41,15 @@ def test_SAM():
     eq_('+', v['strand'])
 
 
-def test_SAM_type():
-    f = dummy('sam')
-    j = SAM(args=['--type', 'blah']).sandbox(f)
-    j.run_job()
-    out = j.parse_output()
-
+@dummytest(SAM(args=['--type', 'blah']), 'sam')
+def test_SAM_type(out):
     k, v = out[0]
     eq_('blah', v['type'])
 
 
-def test_Splat():
-    f = dummy('splat')
-    j = Splat().sandbox(f)
-    j.run_job()
-    out = j.parse_output()
-    out = dict((x[1]['reference'], x) for x in j.parse_output())
+@dummytest(Splat(), 'splat')
+def test_Splat(out):
+    out = dict((x[1]['reference'], x) for x in out)
 
     eq_(3, len(out))
 
@@ -77,12 +68,8 @@ def test_Splat():
     eq_('', v['read_IDs'])
     eq_('+', v['strand'])
 
-def test_SplitSplat():
-    f = dummy('splat')
-    j = SplitSplat().sandbox(f)
-    j.run_job()
-    out = j.parse_output()
-
+@dummytest(SplitSplat(), 'splat')
+def test_SplitSplat(out):
     eq_(['', 'bas', 'baz', 'foo'], sorted([x[1]['ID'] for x in out]))
     ok_('read_IDs' not in x[1])
     ok_('read_count' not in x[1])

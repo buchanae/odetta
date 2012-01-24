@@ -1,8 +1,6 @@
 update README
 
-installation on pseudo0
-
-way to track timing/perf of test run
+easily tracking resource (CPU/memory) usage would be nice
 
 generated docs
 
@@ -22,20 +20,6 @@ model-tidy, given multiple gff files, output one that's been cleaned up
   - invalid lines are removed
   - genes with no mRNA children are removed
 
-
-test funcs run job code could be abstracted slightly
-    f = dummy('filename')
-    j = JobClass(args=[]).sandbox(f)
-    j.run_job()
-    out = j.parse_output()
-
-    to
-
-    out = test_job(JobClass, 'filename', args)
-
-    def test_job():
-        ...
-        return j.parse_output(JobClass.OUTPUT_PROTOCOL)
 
 init: foo
     TODO add virtualenv to odetta, or maybe just wget
