@@ -19,3 +19,9 @@ def test_distance_between():
 
     eq_(15, distance_between(a, b))
     eq_(15, distance_between(b, a))
+
+    a = {'start': 15, 'end': 45}
+    b = {'start': 30, 'end': 60}
+
+    eq_(-15, distance_between(a, b))
+    eq_(-15, distance_between(b, a))

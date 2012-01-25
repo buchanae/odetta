@@ -8,9 +8,10 @@ def ID_base(ID):
 
 
 def distance_between(a, b):
-    """Return the distance between to two alignments."""
+    """
+    Return the distance between to two alignments.
 
-    if a['start'] < b['start']:
-        return b['start'] - a['end']
-    else:
-        return a['start'] - b['end']
+    Overlaps are returned as negative distance.
+    """
+    a, b = sorted([a, b], key=lambda x: x['start'])
+    return b['start'] - a['end']
