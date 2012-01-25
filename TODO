@@ -1,3 +1,13 @@
+could calculate distance statistics while combining pairs.  what is a good way to report these numbers?  being able to write them to a file is nice too.
+
+could probably move UnambiguousFilter to a --unambiguous switch on the combiner
+
+pipelined job could save on creation of temp dir (writing to input-part-N) and writing final output files
+
+is it possible to calculate distance stat numbers in separate mappers and combine into a single num?
+
+possibly, parsing bowtie and splats could be combined into one job, by checking the number of columns in the input.  that would be a hack.  hadoop/java supports this natively via http://archive.cloudera.com/cdh/3/hadoop/api/org/apache/hadoop/mapreduce/lib/input/MultipleInputs.html
+
 update README
 
 easily tracking resource (CPU/memory) usage would be nice
