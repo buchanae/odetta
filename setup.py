@@ -7,9 +7,11 @@ try:
             'rtree',
             'pyfasta',
             'gff',
+            'stats',
         ],
         'dependency_links': [
             'http://github.com/abuchanan/gff/tarball/master#egg=gff-0.1',
+            'http://github.com/abuchanan/stats/tarball/master#egg=stats-0.1',
         ],
         'provides': ['odetta'],
         'tests_require': ['nose'],

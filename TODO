@@ -1,8 +1,12 @@
 could probably move UnambiguousFilter to a --unambiguous switch on the combiner
 
-pipelined job could save on creation of temp dir (writing to input-part-N) and writing final output files (MAYBE)
+maybe add min/max-distance filter to combiner?
 
-is it possible to calculate distance stat numbers in separate mappers and combine into a single num? yes, http://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Parallel_algorithm
+distance stats for splats?
+
+pull mrjob from my branch in setup.py
+
+pipelined job could save on creation of temp dir (writing to input-part-N) and writing final output files (MAYBE)
 
 possibly, parsing bowtie and splats could be combined into one job, by checking the number of columns in the input.  that would be a hack.  hadoop/java supports this natively via http://archive.cloudera.com/cdh/3/hadoop/api/org/apache/hadoop/mapreduce/lib/input/MultipleInputs.html
 

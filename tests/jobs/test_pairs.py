@@ -9,7 +9,7 @@ disable_mrjob_loggers()
 
 @dummytest(DistanceStatistics(), 'distance_stats')
 def test_distance_stats(out):
-    eq_([('Gaps', 'Mean: 470.0, Standard Deviation: 455.631429996, Variance: 207600.0, N: 5.0'), ('Overlaps', 'Mean: 378.333333333, Standard Deviation: 457.335276964, Variance: 209155.555556, N: 3.0')], out)
+    eq_([('Gaps', 'Mean: 470.0, Standard Deviation: 509.411425078, Variance: 259500.0, N: 5.0'), ('Overlaps', 'Mean: 378.333333333, Standard Deviation: 560.119034968, Variance: 313733.333333, N: 3.0')], out)
 
 
 @dummytest(ToSplat(), 'combine_splats')
