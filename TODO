@@ -9,11 +9,6 @@ cli parameter help
 
 weighted coverage
 
-
-fix splat strand output to +/-
-  test this on pseudo0
-
-
 model-tidy, given multiple gff files, output one that's been cleaned up
   - detect and resolve duplicate IDs (by appending -N)
   - related features are grouped
@@ -32,3 +27,9 @@ init: foo
     setenv LD_LIBRARY_PATH /pseudospace1/buchanae/spatialindexlib/lib:$LD_LIBRARY_PATH
 
     ./venv/bin/nosetests-2.7 tests/
+
+
+file bug with mrjob:
+    if sort fails on unix (because of something like a full tmp dir) it will try again
+    with piping (which is meant for windows compat.) but really it's just going to fail
+    again.  also, a sort fail could mention sort-stderr or print out a useful message

@@ -1,5 +1,7 @@
 GENOME_FASTA = 
 GENOME_GFF = 
+MIN_DISTANCE = 
+MAX_DISTANCE =
 MIN_OVERLAP = 0.8
 MIN_EXONS = 2
 MIN_MRNA_LENGTH = 1000
@@ -45,14 +47,19 @@ aligned.json : aligned.bowtie
 pairs.json : splat.json aligned.json
 		$(JOB) pairs.combiner splat.json aligned.json > pairs.json
 
-pairs-stats.json : pairs.json
-		$(JOB) pairs.distance-statistics pairs.json > pairs-stats.json
+distance-stats : pairs.json
+		$(JOB) pairs.distance-statistics pairs.json > distance-stats
+		cat distance-stats
 
-valid.json : pairs.json
-		$(JOB) pairs.valid-filter pairs.json > valid.json
+distance-filter : pairs.json
+		$(JOB) pairs.distance-filter --min-distance $(MIN_DISTANCE) \
+																 --max-distance $(MAX_DISTANCE) pairs.json \
+																 > pairs-distance-filtered.json
+		mv pairs.json pairs-pre-distance-filter.json
+		mv pairs-distance-filtered.json pairs.json
 
-valid.splat : valid.json
-		$(JOB) pairs.to-splat valid.json > valid.splat
+valid.splat : pairs.json
+		$(JOB) pairs.to-splat pairs.json > valid.splat
 
 aligned.sam : aligned.json
 		$(JOB) to-sam aligned.json > aligned.sam
@@ -79,17 +86,20 @@ gmb-aligned.json : gmb.bowtie
 gmb-pairs.json : gmb-aligned.json
 		$(JOB) pairs.combiner gmb-aligned.json > gmb-pairs.json
 
-gmb-pairs-stats.json : gmb-pairs.json
-		$(JOB) pairs.distance-statistics gmb-pairs.json > gmb-pairs-stats.json
+gmb-distance-stats : gmb-pairs.json
+		$(JOB) pairs.distance-statistics gmb-pairs.json > gmb-distance-stats
+		cat gmb-distance-stats
 
-gmb-valid.json : gmb-pairs.json
-		$(JOB) pairs.valid-filter gmb-pairs.json > gmb-valid.json
+gmb-distance-filter : gmb-pairs.json
+		$(JOB) pairs.distance-filter gmb-pairs.json > gmb-pairs-distance-filtered.json
+		mv gmb-pairs.json gmb-pairs-pre-distance-filter.json
+		mv gmb-pairs-distance-filtered.json gmb-pairs.json
 
-gmb-unambiguous.json : gmb-valid.json
-		$(JOB) pairs.unambiguous-filter gmb-valid.json > gmb-unambiguous.json
+gmb-unambiguous.json : gmb-pairs.json
+		$(JOB) pairs.unambiguous-filter gmb-pairs.json > gmb-unambiguous.json
 
 gmb-counts.json : gmb-unambiguous.json
-		$(JOB) pairs.reference-counts gmb-unambiguous.json > counts.json
+		$(JOB) pairs.reference-counts gmb-unambiguous.json > gmb-counts.json
 
 filtered.gff : gmb-counts.json gmb.gff
 		$(JOB) gff.filter --counts gmb-counts.json --min-length $(MIN_MRNA_LENGTH) \

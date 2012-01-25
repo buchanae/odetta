@@ -4,7 +4,7 @@ from mrjob.protocol import JSONProtocol
 from odetta.utils import distance_between
 
 
-class ValidFilter(MRJob):
+class DistanceFilter(MRJob):
 
     """
     Filter alignment pairs on a set of criteria including distance, strand, etc.
@@ -18,7 +18,7 @@ class ValidFilter(MRJob):
     def configure_options(self):
         """Define command-line options."""
 
-        super(ValidFilter, self).configure_options()
+        super(DistanceFilter, self).configure_options()
         self.add_passthrough_option('--min-distance', action='store',
                                     type=float, default=float('-inf'))
         self.add_passthrough_option('--max-distance', action='store',
@@ -33,13 +33,10 @@ class ValidFilter(MRJob):
         """
 
         x, y = pair
-        if x['reference'] == y['reference'] and x['strand'] != y['strand']:
-
-            d = distance_between(x, y)
-            if d >= self.options.min_distance and d <= self.options.max_distance:
-
-                yield key, pair
+        d = distance_between(x, y)
+        if d >= self.options.min_distance and d <= self.options.max_distance:
+            yield key, pair
 
 
 if __name__ == '__main__':
-    ValidFilter.run()
+    DistanceFilter.run()

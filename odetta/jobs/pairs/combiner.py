@@ -23,7 +23,10 @@ class Combiner(MRJob):
         """Filter and emit valid alignments individually."""
 
         for x, y in combinations(alignments, 2):
-            if x['ID'] != y['ID']:
+            if x['ID'] != y['ID'] and \
+               x['reference'] == y['reference'] and \
+               x['strand'] != y['strand']:
+
                 yield None, (x, y)
 
 

@@ -12,7 +12,7 @@ names = {
     'pairs.reference-counts': pairs.ReferenceCounts,
     'pairs.to-splat': pairs.ToSplat,
     'pairs.unambiguous-filter': pairs.UnambiguousFilter,
-    'pairs.valid-filter': pairs.ValidFilter,
+    'pairs.distance-filter': pairs.DistanceFilter,
     'parse.bowtie': parse.Bowtie,
     'parse.sam': parse.SAM,
     'parse.splat': parse.Splat,

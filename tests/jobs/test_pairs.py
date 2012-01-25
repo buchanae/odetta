@@ -9,8 +9,7 @@ disable_mrjob_loggers()
 
 @dummytest(DistanceStatistics(), 'distance_stats')
 def test_distance_stats(out):
-    eq_(1, len(out))
-    eq_([470.0, 455.63142999578071], out[0][1])
+    eq_([('Mean', 470.0), ('Standard Deviation', 455.63142999578071)], out)
 
 
 @dummytest(ToSplat(), 'combine_splats')
@@ -23,13 +22,8 @@ def test_ToSplat(out):
     ok_([b, a], sorted([x[1] for x in out]))
 
 
-@dummytest(ValidFilter(), 'filter_invalid')
-def test_ValidFilter(out):
-    eq_(['bat', 'bay', 'foo'], sorted([x[0] for x in out]))
-
-
-@dummytest(ValidFilter(args=['--min-distance', '100', '--max-distance', '1000']), 
-                       'filter_invalid_distance')
+@dummytest(DistanceFilter(args=['--min-distance', '100', '--max-distance', '1000']), 
+           'distance_filter')
 def test_ValidFilter_by_distance(out):
     eq_(['bar', 'bas'], sorted([x[0] for x in out]))
 
@@ -57,4 +51,4 @@ def test_reference_counts(out):
 
 @dummytest(Combiner(), 'combiner')
 def test_combiner(out):
-    eq_([(1, 3), (2, 3), (5, 6)], sorted([(x[1][0]['n'], x[1][1]['n']) for x in out]))
+    eq_([('foo\\1', 'foo\\2')], [(x[1][0]['ID'], x[1][1]['ID']) for x in out])

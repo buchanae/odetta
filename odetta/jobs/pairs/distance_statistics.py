@@ -1,7 +1,7 @@
 import math
 
 from mrjob.job import MRJob
-from mrjob.protocol import JSONProtocol
+from mrjob.protocol import JSONProtocol, ReprProtocol
 
 from odetta.utils import distance_between
 
@@ -15,6 +15,8 @@ class DistanceStatistics(MRJob):
     """
 
     INPUT_PROTOCOL = JSONProtocol
+    OUTPUT_PROTOCOL = ReprProtocol
+
     # necessary for aggregating one set of statistics.
     JOBCONF = {'mapreduce.job.maps': '1'}
 
@@ -38,7 +40,9 @@ class DistanceStatistics(MRJob):
         
         var = self.ssr / self.n
         std = math.sqrt(var)
-        yield None, (self.mean, std)
+
+        yield 'Mean', self.mean
+        yield 'Standard Deviation', std
 
 
 if __name__ == '__main__':
