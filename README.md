@@ -10,15 +10,8 @@ External software is used at various points in the pipeline:
 
 ## Installation
 
-```pip install -r requirements.txt```
-
-Odetta requires a couple python packages, [mrjob](http://packages.python.org/mrjob/) 
-and [nose](http://readthedocs.org/docs/nose/).
-
+TODO
 TODO note about rtree
-
-Using a [virtualenv](http://pypi.python.org/pypi/virtualenv) is recommended, of course.
-
 
 ## Usage
 
