@@ -1,8 +1,12 @@
 ""	{"ID": "foo\\1", "strand": "+", "reference": "ChrC"}
-""	{"ID": "bat\\2", "strand": "-", "reference": "ChrD"}
-""	{"ID": "bar\\1", "strand": "+", "reference": "ChrC"}
+""	{"ID": "foo\\2", "strand": "-", "reference": "ChrC"}
 ""	{"ID": "baz\\1", "strand": "+", "reference": "ChrC"}
 ""	{"ID": "baz\\1", "strand": "-", "reference": "ChrC"}
+""	{"ID": "bar\\1", "strand": "+", "reference": "ChrC"}
 ""	{"ID": "bar\\2", "strand": "+", "reference": "ChrC"}
 ""	{"ID": "bat\\1", "strand": "+", "reference": "ChrC"}
-""	{"ID": "foo\\2", "strand": "-", "reference": "ChrC"}
+""	{"ID": "bat\\2", "strand": "-", "reference": "ChrD"}
+""	{"ID": "foz\\1", "strand": "+", "reference": "ChrC"}
+""	{"ID": "foz\\2", "strand": "-", "reference": "ChrC"}
+""	{"ID": "foz\\1", "strand": "+", "reference": "ChrB"}
+""	{"ID": "foz\\2", "strand": "-", "reference": "ChrB"}
