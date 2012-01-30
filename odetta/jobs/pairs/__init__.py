@@ -1,6 +1,5 @@
 from combiner import Combiner
 from distance_statistics import DistanceStatistics
-from incomplete_filter import IncompleteFilter
 from reference_counts import ReferenceCounts
 from to_splat import ToSplat
 from unambiguous_filter import UnambiguousFilter
