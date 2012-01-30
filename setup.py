@@ -1,28 +1,16 @@
-try:
-    from setuptools import setup
-    # arguments that distutils doesn't understand
-    setuptools_kwargs = {
-        'install_requires': [
-            'mrjob',
-            'rtree',
-            'pyfasta',
-            'gff',
-            'stats',
-        ],
-        'provides': ['odetta'],
-        'tests_require': ['nose'],
-    }
-except ImportError:
-    from distutils.core import setup
-    setuptools_kwargs = {}
+import os
+
+from distutils.core import setup
 
 import odetta
 
 
+long_description = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
+
 setup(
     name='odetta',
     description='TODO',
-    long_description=open('README.md').read(),
+    long_description=long_description,
     version=odetta.__version__,
     author='Alex Buchanan',
     author_email='buchanae@gmail.com',
@@ -35,5 +23,4 @@ setup(
               'odetta.jobs.parse'],
     package_data={'odetta': ['Makefile']},
     scripts=['scripts/odetta'],
-    **setuptools_kwargs
 )
