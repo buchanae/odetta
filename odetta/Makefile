@@ -84,7 +84,7 @@ gmb-aligned.json : gmb.bowtie
 		$(JOB) parse.bowtie gmb.bowtie > gmb-aligned.json
 
 gmb-pairs.json : gmb-aligned.json
-		$(JOB) pairs.combiner gmb-aligned.json > gmb-pairs.json
+		$(JOB) pairs.combiner --unambiguous-only gmb-aligned.json > gmb-pairs.json
 
 gmb-distance-stats : gmb-pairs.json
 		$(JOB) pairs.distance-statistics gmb-pairs.json > gmb-distance-stats
