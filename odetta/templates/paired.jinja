@@ -1,0 +1,60 @@
+{% extends 'single.jinja' %}
+
+{% block extra_vars %}
+MIN_DISTANCE = {{ min_distance|default('0') }}
+MAX_DISTANCE = {{ max_distance|default('1000000') }}
+{% endblock %}
+
+{% block genome_alignement %}
+unaligned.fasta aligned.bowtie : $(GENOME_EBWT)
+		$(BOWTIE) --un unaligned.fasta --suppress 6,7,8 $(GENOME_EBWT_BASE) $(READS) \
+							aligned.bowtie
+{% endblock %}
+
+{% block splats %}
+splat.json : *.supersplat
+		$(JOB) parse.split-splat $^ > splat.json
+
+aligned.json : aligned.bowtie
+		$(JOB) parse.bowtie aligned.bowtie > aligned.json
+
+pairs.json : splat.json aligned.json
+		$(JOB) pairs.combiner splat.json aligned.json > pairs.json
+
+distance-stats : pairs.json
+		$(JOB) pairs.distance-statistics pairs.json > distance-stats
+		cat distance-stats
+
+distance-filter : pairs.json
+		$(JOB) pairs.distance-filter --min-distance $(MIN_DISTANCE) \
+																 --max-distance $(MAX_DISTANCE) pairs.json \
+																 > pairs-distance-filtered.json
+		mv pairs.json pairs-pre-distance-filter.json
+		mv pairs-distance-filtered.json pairs.json
+
+splats : pairs.json
+		$(JOB) pairs.to-splat pairs.json > splats
+
+aligned.sam : aligned.json
+		$(JOB) to-sam aligned.json > aligned.sam
+{% endblock %}
+
+{% block counts %}
+gmb-pairs.json : gmb-aligned.json
+		$(JOB) pairs.combiner --unambiguous-only gmb-aligned.json > gmb-pairs.json
+
+gmb-distance-stats : gmb-pairs.json
+		$(JOB) pairs.distance-statistics gmb-pairs.json > gmb-distance-stats
+		cat gmb-distance-stats
+
+gmb-distance-filter : gmb-pairs.json
+		$(JOB) pairs.distance-filter gmb-pairs.json > gmb-pairs-distance-filtered.json
+		mv gmb-pairs.json gmb-pairs-pre-distance-filter.json
+		mv gmb-pairs-distance-filtered.json gmb-pairs.json
+
+gmb-unambiguous.json : gmb-pairs.json
+		$(JOB) pairs.unambiguous-filter gmb-pairs.json > gmb-unambiguous.json
+
+counts.json : gmb-unambiguous.json
+		$(JOB) pairs.reference-counts gmb-unambiguous.json > counts.json
+{% endblock %}

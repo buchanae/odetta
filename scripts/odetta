@@ -3,13 +3,16 @@
 import argparse
 import os
 import shlex
-import shutil
 import subprocess
 import sys
+
+from jinja2 import Environment, PackageLoader
 
 import odetta
 import odetta.jobs
 
+
+env = Environment(loader=PackageLoader('odetta', 'templates'))
 
 parser = argparse.ArgumentParser()
 parser.add_argument('command', choices=['makefile', 'run'], help='TODO')
@@ -18,10 +21,27 @@ parser.add_argument('args', nargs=argparse.REMAINDER, help='TODO')
 run_parser = argparse.ArgumentParser()
 run_parser.add_argument('job', help='TODO')
 
-mf_parser = argparse.ArgumentParser()
-mf_parser.add_argument('--name')
+mf_parser = argparse.ArgumentParser(argument_default=argparse.SUPPRESS)
+mf_parser.add_argument('--name', default='Makefile')
+mf_parser.add_argument('--type', default='paired')
+mf_parser.add_argument('--genome-fasta')
+mf_parser.add_argument('--genome-gff')
+mf_parser.add_argument('--min-distance')
+mf_parser.add_argument('--max-distance')
+mf_parser.add_argument('--min-overlap')
+mf_parser.add_argument('--min-exons')
+mf_parser.add_argument('--min-mrna-length')
+mf_parser.add_argument('--reads')
+mf_parser.add_argument('--split-size')
+mf_parser.add_argument('--ebwt-base')
+mf_parser.add_argument('--supersplat')
+mf_parser.add_argument('--splat-min-intron')
+mf_parser.add_argument('--splat-max-intron')
+mf_parser.add_argument('--splat-min-read-chunk')
+mf_parser.add_argument('--splat-max-index-chunk')
 
 #TODO add job list to cli help
+#TODO move this out to a module and unit test
 
 if __name__ == '__main__':
     args = parser.parse_args()
@@ -38,6 +58,13 @@ if __name__ == '__main__':
 
     elif args.command == 'makefile':
         mf_args = mf_parser.parse_args(args.args)
-        name = mf_args.name if mf_args.name else 'Makefile'
-        shutil.copy(odetta.makefile, name)
-        print 'Created {}'.format(os.path.abspath(name))
+        out = open(mf_args.name, 'w')
+
+        if mf_args.type == 'paired':
+            t = env.get_template('paired.jinja')
+        else:
+            t = env.get_template('single.jinja')
+
+        out.write(t.render(**vars(mf_args)))
+
+        print 'Created {}'.format(os.path.abspath(mf_args.name))
