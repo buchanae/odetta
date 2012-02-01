@@ -1,0 +1,86 @@
+GENOME_FASTA = {{ genome_fasta }}
+GENOME_GFF = {{ genome_gff }}
+MIN_OVERLAP = {{ min_overlap|default('0.8') }}
+MIN_EXONS = {{ min_exons|default('2') }}
+MIN_MRNA_LENGTH = {{ min_mrna_length|default('1000') }}
+READS = {{ reads|join(',') }}
+SPLAT_MIN_INTRON = {{ splat_min_intron|default('50') }}
+SPLAT_MAX_INTRON = {{ splat_max_intron|default('10000') }}
+SPLAT_MIN_READ_CHUNK = {{ splat_min_read_chunk|default('20') }}
+SPLAT_MAX_INDEX_CHUNK = {{ splat_max_read_chunk|default('60') }}
+STACK_MIN_UNIQUE = {{ stack_min_unique|default('2') }}
+STACK_MIN_COPY = {{ stack_min_copy|default('1') }}
+SPLIT_SIZE = {{ split_size|default('25000000') }}
+
+{% block extra_vars %}
+{% endblock %}
+
+TIME = /usr/bin/time --output=times --append
+ODETTA = $(TIME) odetta
+
+
+SUPERSPLAT = $(TIME) {{ supersplat|default('supersplat') }}
+
+JOB = $(ODETTA) run 
+SPLAT = $(SUPERSPLAT) splat -t 8 -n $(SPLAT_MIN_INTRON) -x $(SPLAT_MAX_INTRON) \
+                      -c $(SPLAT_MIN_READ_CHUNK) -i $(SPLAT_MAX_INDEX_CHUNK) -S 1
+STACK = $(SUPERSPLAT) stack -n $(STACK_MIN_UNIQUE) -c $(STACK_MIN_COPY)
+
+GENOME_EBWT_BASE = {{ ebwt_base|default('genome') }}
+GENOME_EBWT = $(GENOME_EBWT_BASE).1.ebwt $(GENOME_EBWT_BASE).2.ebwt \
+              $(GENOME_EBWT_BASE).3.ebwt $(GENOME_EBWT_BASE).4.ebwt \
+							$(GENOME_EBWT_BASE).rev.1.ebwt $(GENOME_EBWT_BASE).rev.2.ebwt
+
+BOWTIE_BUILD = $(TIME) bowtie-build --offrate 1 --quiet
+BOWTIE = $(TIME) bowtie -f -p 8 -v 0 --all
+
+all : overlap.gff
+
+$(GENOME_EBWT) : $(GENOME_FASTA)
+		$(BOWTIE_BUILD) $(GENOME_FASTA) $(GENOME_EBWT_BASE)
+
+{% block genome_alignement %}
+unaligned.fasta aligned.sam : $(GENOME_EBWT)
+		$(BOWTIE) --un unaligned.fasta -S --sam-nohead $(GENOME_EBWT_BASE) $(READS) \
+							aligned.sam
+{% endblock %}
+
+split-unaligned : unaligned.fasta
+		split --lines=$(SPLIT_SIZE) unaligned.fasta split-unaligned-
+		touch split-unaligned
+
+splat-unaligned : split-unaligned-*
+		$(SPLAT) -f $? -r $(GENOME_FASTA)
+		touch splat-unaligned
+		
+{% block splats %}
+splats : split-unaligned-*.supersplat
+		touch splats
+		cat $^ >> splats
+{% endblock %}
+
+stacks : splats
+		$(STACK) -r $(GENOME_FASTA) -s splats -o stacks
+
+gmb.gff : stacks aligned.sam
+		$(GMB) -r $(GENOME_FASTA) -a aligned.sam -s stacks -o gmb.gff
+
+gmb.fasta : gmb.gff
+		$(JOB) gff.transcriptome --genome $(GENOME_FASTA) gmb.gff > gmb.fasta
+
+GMB_EBWT = gmb.1.ebwt gmb.2.ebwt gmb.3.ebwt gmb.4.ebwt gmb.rev.1.ebwt gmb.rev.2.ebwt 
+$(GMB_EBWT) : gmb.fasta
+		$(BOWTIE_BUILD) gmb.fasta gmb
+
+{% block gmb_alignments %}
+gmb.bowtie : $(GMB_EBWT)
+		 $(BOWTIE) -m 1 --suppress 6,7,8 gmb $(READS) gmb.bowtie
+{% endblock %}
+
+filtered.gff : counts.json gmb.gff
+		$(JOB) gff.filter --min-length $(MIN_MRNA_LENGTH) \
+											--min-exons $(MIN_EXONS) gmb.gff > filtered.gff
+
+overlap.gff : filtered.gff
+		$(JOB) gff.overlap --reference $(GENOME_GFF) --min-overlap $(MIN_OVERLAP) \
+												filtered.gff > overlap.gff
