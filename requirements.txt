@@ -1,5 +1,6 @@
 rtree
 pyfasta
+jinja2
 
 -e git://github.com/abuchanan/mrjob.git#egg=mrjob
 -e git://github.com/abuchanan/gff.git#egg=gff
