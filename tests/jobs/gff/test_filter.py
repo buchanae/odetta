@@ -59,6 +59,12 @@ def test_Filter(out):
     eq_(mRNAs, out)
 
 
+@dummytest(Filter(), 'e.gff')
+def test_Filter_no_parent_mrna(out):
+    out = sorted([x[1] for x in out])
+    eq_(mRNAs[:2], out)
+
+
 @dummytest(Filter(args=['--max-length', '13']), 'a.gff')
 def test_Filter_max_length(out):
     out = sorted([x[1] for x in out])

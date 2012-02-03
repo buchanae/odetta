@@ -81,6 +81,9 @@ class Filter(MRJob):
             else:
                 mRNA = f
 
+        if not mRNA:
+            return
+
         hits = sum(self.counts[ID].values()) if ID in self.counts else 0
 
         try:
