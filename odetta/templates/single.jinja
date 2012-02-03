@@ -20,6 +20,7 @@ ODETTA = $(TIME) odetta
 
 
 SUPERSPLAT = $(TIME) {{ supersplat|default('supersplat') }}
+GMB = $(TIME) {{ gmb|default('gmb') }}
 
 JOB = $(ODETTA) run 
 SPLAT = $(SUPERSPLAT) splat -t 8 -n $(SPLAT_MIN_INTRON) -x $(SPLAT_MAX_INTRON) \
@@ -74,7 +75,7 @@ $(GMB_EBWT) : gmb.fasta
 
 {% block gmb_alignments %}
 gmb.bowtie : $(GMB_EBWT)
-		 $(BOWTIE) -m 1 --suppress 6,7,8 gmb $(READS) gmb.bowtie
+		 $(BOWTIE) --suppress 6,7,8 gmb $(READS) gmb.bowtie
 {% endblock %}
 
 filtered.gff : counts.json gmb.gff
