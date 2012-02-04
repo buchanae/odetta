@@ -21,6 +21,8 @@ class Overlap(MRJob):
 
     """TODO"""
 
+    OUTPUT_PROTOCOL = RawValueProtocol
+
     def configure_options(self):
         """Define command-line options."""
 
