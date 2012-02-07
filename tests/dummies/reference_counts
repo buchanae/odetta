@@ -1,7 +1,0 @@
-""	[{"reference": "ChrC", "type": "one"},{"reference": "ChrC", "type": "one"}]
-""	[{"reference": "ChrC", "type": "one"},{"reference": "ChrC", "type": "two"}]
-""	[{"reference": "ChrC", "type": "two"},{"reference": "ChrC", "type": "one"}]
-""	[{"reference": "ChrD", "type": "one"},{"reference": "ChrD", "type": "one"}]
-""	[{"reference": "ChrD", "type": "one"},{"reference": "ChrD", "type": "one"}]
-""	[{"reference": "ChrR", "type": "one"},{"reference": "ChrR", "type": "one"}]
-""	[{"reference": "ChrD", "type": "one"},{"reference": "ChrD", "type": "one"}]

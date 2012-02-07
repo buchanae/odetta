@@ -1,0 +1,6 @@
+null	[{"start": 10, "end": 50, "reference": "Chr1_40.1"},{"start": 150, "end": 200, "reference": "Chr1_40.1"}]
+null	[{"start": 210, "end": 250, "reference": "Chr1_40.1"},{"start": 270, "end": 350, "reference": "Chr1_40.1"}]
+null	[{"start": 10, "end": 50, "reference": "Chr1_40.1"},{"start": 70, "end": 80, "reference": "Chr1_40.1"}]
+
+null	[{"start": 10, "end": 50, "reference": "Chr1_364.1"},{"start": 150, "end": 200, "reference": "Chr1_364.1"}]
+null	[{"start": 50, "end": 100, "reference": "Chr1_364.1"},{"start": 150, "end": 200, "reference": "Chr1_364.1"}]

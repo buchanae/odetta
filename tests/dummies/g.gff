@@ -1,0 +1,23 @@
+Chr1	GMB	chromosome	1	29952646	.	.	.	ID=Chr1;Name=Chr1
+
+Chr1	GMB	gene	31315	31925	.	-	.	ID=Chr1_40;Note=protein_coding_gene
+Chr1	GMB	mRNA	31315	31925	.	-	.	ID=Chr1_40.1;Parent=Chr1_40
+Chr1	GMB	exon	31803	31925	.	-	.	Parent=Chr1_40.1
+Chr1	GMB	exon	31631	31712	.	-	.	Parent=Chr1_40.1
+Chr1	GMB	exon	31315	31534	.	-	.	Parent=Chr1_40.1
+
+Chr1	GMB	gene	229054	230037	.	+	.	ID=Chr1_265;Note=protein_coding_gene
+Chr1	GMB	mRNA	229054	230037	.	+	.	ID=Chr1_265.1;Parent=Chr1_265
+
+Chr1	GMB	gene	281982	282666	.	+	.	ID=Chr1_364;Note=protein_coding_gene
+Chr1	GMB	mRNA	281982	282666	.	+	.	ID=Chr1_364.1;Parent=Chr1_364
+Chr1	GMB	exon	281982	282064	.	+	.	Parent=Chr1_364.1
+Chr1	GMB	exon	282344	282666	.	+	.	Parent=Chr1_364.1
+
+Chr1	GMB	gene	286619	287917	.	+	.	ID=Chr1_366;Note=noncoding_transcript
+Chr1	GMB	noncoding_transcript	286619	287917	.	+	.	ID=Chr1_366.1;Parent=Chr1_366
+Chr1	GMB	exon	286619	286708	.	+	.	Parent=Chr1_366.1
+Chr1	GMB	exon	286933	287038	.	+	.	Parent=Chr1_366.1
+Chr1	GMB	exon	287125	287254	.	+	.	Parent=Chr1_366.1
+Chr1	GMB	exon	287415	287623	.	+	.	Parent=Chr1_366.1
+Chr1	GMB	exon	287769	287917	.	+	.	Parent=Chr1_366.1

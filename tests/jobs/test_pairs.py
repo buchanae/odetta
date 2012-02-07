@@ -40,13 +40,19 @@ def test_inverted_unambiguous_filter(out):
         sorted([(x[1][0]['ID'], x[1][1]['ID']) for x in out]))
 
 
-@dummytest(ReferenceCounts(), 'reference_counts')
+@dummytest(ReferenceCounts(args=['--reference', 'tests/dummies/g.gff']), 
+           'reference_counts_alignments')
 def test_reference_counts(out):
-    eq_(3, len(out))
-    d = dict(x for x in out)
-    eq_({'one-one': 1, 'one-two': 2}, d['ChrC'])
-    eq_({'one-one': 3}, d['ChrD'])
-    eq_({'one-one': 1}, d['ChrR'])
+    eq_({
+      'Chr1_40.1': {
+          'complete-complete': 2,
+          'edge-edge': 1,
+      },
+      'Chr1_364.1': {
+          'complete-edge': 1,
+          'complete-complete': 1,
+      },
+    }, dict((x[0], x[1]) for x in out))
 
 
 @dummytest(Combiner(), 'combiner')
