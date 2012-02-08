@@ -1,3 +1,5 @@
+import string
+
 from mrjob.job import MRJob
 from mrjob.protocol import PickleProtocol, RawValueProtocol
 from pyfasta import Fasta
@@ -5,11 +7,19 @@ from pyfasta import Fasta
 from feature import Feature
 
 
+complements = string.maketrans('ATCGN', 'TAGCN')
+
+
 def chunks(l, n):
     """ Yield successive n-sized chunks from l.
     """
     for i in xrange(0, len(l), n):
         yield l[i:i+n]
+
+
+def reverse_complement(seq):
+    return seq.translate(complements)[::-1]
+    
 
 
 class Transcriptome(MRJob):
@@ -46,7 +56,11 @@ class Transcriptome(MRJob):
         """TODO"""
 
         def genome_seq(feature):
-            return self.genome[feature.seqid][feature.start - 1:feature.end]
+            seq = self.genome[feature.seqid][feature.start - 1:feature.end]
+            if feature.strand == '-':
+                return reverse_complement(seq)
+            else:
+                return seq
 
         def yield_seq(seq):
             header = '>{}'.format(ID)
@@ -57,7 +71,8 @@ class Transcriptome(MRJob):
             for feature in features:
                 yield_seq(genome_seq(feature))
         else:
-            for exon in sorted(features, key=lambda f: f.start):
+            reverse = features[0].strand == '-'
+            for exon in sorted(features, key=lambda f: f.start, reverse=reverse):
                 seq += genome_seq(exon)
 
             yield_seq(seq)
