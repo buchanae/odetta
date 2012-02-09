@@ -42,9 +42,13 @@ class Transcriptome(MRJob):
         try:
             f = Feature.from_string(line)
 
-            if f.type == 'exon' or f.type == 'noncoding_transcript':
+            if f.type == 'exon':
                 for parent in f.parents:
                     yield (parent, f.type), f
+
+            elif f.type == 'noncoding_transcript':
+                for parent in f.parents:
+                    yield (f.ID, f.type), f
 
         except Feature.ParseError:
             pass
@@ -62,20 +66,23 @@ class Transcriptome(MRJob):
             else:
                 return seq
 
-        def yield_seq(seq):
+        def fasta_rec(seq):
             header = '>{}'.format(ID)
-            yield None, '\n'.join([header] + list(chunks(seq, 70)))
+            return '\n'.join([header] + list(chunks(seq, 70)))
 
-        seq = ''
+
         if feature_type == 'noncoding_transcript':
             for feature in features:
-                yield_seq(genome_seq(feature))
+                yield None, fasta_rec(genome_seq(feature))
         else:
+            features = list(features)
             reverse = features[0].strand == '-'
+
+            seq = ''
             for exon in sorted(features, key=lambda f: f.start, reverse=reverse):
                 seq += genome_seq(exon)
 
-            yield_seq(seq)
+            yield None, fasta_rec(seq)
 
 
 if __name__ == '__main__':

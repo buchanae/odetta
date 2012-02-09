@@ -1,11 +1,23 @@
 Chr1	TAIR10	chromosome	1	30427671	.	.	.	ID=Chr1
-Chr1	TAIR10	gene	2	20	.	+	.	ID=Gene1
+Chr1	TAIR10	gene	2	20	.	-	.	ID=Gene1
 Chr1	TAIR10	mRNA	2	10	.	+	.	ID=Gene1.1
 Chr1	TAIR10	exon	2	5	.	+	.	Parent=Gene1.1
 Chr1	TAIR10	exon	7	10	.	+	.	Parent=Gene1.1
 Chr1	TAIR10	mRNA	12	20	.	+	.	ID=Gene1.2
 Chr1	TAIR10	exon	12	15	.	+	.	Parent=Gene1.2
 Chr1	TAIR10	exon	17	20	.	+	.	Parent=Gene1.2
+
 Chr2	TAIR10	gene	65	80	.	+	.	ID=Gene3
 Chr2	TAIR10	mRNA	65	80	.	+	.	ID=Gene3.1
 Chr2	TAIR10	exon	65	80	.	+	.	Parent=Gene3.1
+
+Chr3	TAIR10	gene	2	10	.	+	.	ID=Gene4
+Chr3	TAIR10	noncoding_transcript	2	10	.	+	.	ID=Gene4.1;Parent=Gene4
+
+Chr3	TAIR10	gene	2	10	.	-	.	ID=Gene5
+Chr3	TAIR10	noncoding_transcript	2	10	.	-	.	ID=Gene5.1;Parent=Gene5
+
+Chr4	TAIR10	gene	2	20	.	-	.	ID=Gene6
+Chr4	TAIR10	mRNA	12	20	.	-	.	ID=Gene6.1
+Chr4	TAIR10	exon	12	15	.	-	.	Parent=Gene6.1
+Chr4	TAIR10	exon	17	20	.	-	.	Parent=Gene6.1
