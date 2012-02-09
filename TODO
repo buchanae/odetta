@@ -1,14 +1,13 @@
+need both percent overlap of reference and query
+
 maybe add min/max-distance filter to combiner?
 
-distance stats for splats?
+fix reference counts to find alignments that overlap splice junction
 
-pull mrjob from my branch in setup.py
-
-pipelined job could save on creation of temp dir (writing to input-part-N) and writing final output files (MAYBE)
-
-possibly, parsing bowtie and splats could be combined into one job, by checking the number of columns in the input.  that would be a hack.  hadoop/java supports this natively via http://archive.cloudera.com/cdh/3/hadoop/api/org/apache/hadoop/mapreduce/lib/input/MultipleInputs.html
+make file isn't the greatest.  rules like splat-unaligned and split-unaligned*.supersplat aren't working correctly.  is make the proper tool?
 
 use JSONValueProtocol instead?  removes leading null and tab, which are in almost every output
+
 
 update README
 
@@ -25,21 +24,32 @@ model-tidy, given multiple gff files, output one that's been cleaned up
   - invalid lines are removed
   - genes with no mRNA children are removed
 
-
-init: foo
-    TODO add virtualenv to odetta, or maybe just wget
-    wget https://raw.github.com/pypa/virtualenv/master/virtualenv.py
-
-    $(PYTHON) virtualenv.py venv
-    detect shell and source appropriately
-      source venv/bin/activate.csh
-
-    setenv LD_LIBRARY_PATH /pseudospace1/buchanae/spatialindexlib/lib:$LD_LIBRARY_PATH
-
-    ./venv/bin/nosetests-2.7 tests/
-
-
 file bug with mrjob:
     if sort fails on unix (because of something like a full tmp dir) it will try again
     with piping (which is meant for windows compat.) but really it's just going to fail
     again.  also, a sort fail could mention sort-stderr or print out a useful message
+
+
+
+stats
+------
+
+  # of reads
+  aligned
+  how many genes aligned
+  average coverage
+  number of genes identified
+     of isoforms
+
+  # of reads that mapped to each type, splice, transcript, etc
+
+  # of exons per mrna
+
+  # new isoforms vs previous
+
+  # of new gene loci
+
+  sizes of types, splice, mrnas, exons,
+
+  dinucleotide content , counts
+      flanks
