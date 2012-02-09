@@ -32,9 +32,9 @@ class Transcriptome(MRJob):
         try:
             f = Feature.from_string(line)
 
-            if f.type == 'exon':
+            if f.type == 'exon' or f.type == 'noncoding_transcript':
                 for parent in f.parents:
-                    yield parent, f
+                    yield (parent, f.type), f
 
         except Feature.ParseError:
             pass
@@ -42,15 +42,25 @@ class Transcriptome(MRJob):
     def reducer_init(self):
         self.genome = Fasta(self.options.genome)
 
-    def reducer(self, mRNA_ID, exons):
+    def reducer(self, (ID, feature_type), features):
         """TODO"""
 
-        seq = ''
-        for exon in sorted(exons, key=lambda f: f.start):
-            seq += self.genome[exon.seqid][exon.start - 1:exon.end]
+        def genome_seq(feature):
+            return self.genome[feature.seqid][feature.start - 1:feature.end]
 
-        header = '>{}'.format(mRNA_ID)
-        yield None, '\n'.join([header] + list(chunks(seq, 70)))
+        def yield_seq(seq):
+            header = '>{}'.format(ID)
+            yield None, '\n'.join([header] + list(chunks(seq, 70)))
+
+        seq = ''
+        if feature_type == 'noncoding_transcript':
+            for feature in features:
+                yield_seq(genome_seq(feature))
+        else:
+            for exon in sorted(features, key=lambda f: f.start):
+                seq += genome_seq(exon)
+
+            yield_seq(seq)
 
 
 if __name__ == '__main__':
