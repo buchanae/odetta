@@ -1,8 +1,7 @@
+import argparse
+from collections import Counter, defaultdict
 import json
 import math
-
-from mrjob.job import MRJob
-from mrjob.protocol import PickleProtocol, RawValueProtocol
 
 from feature import Feature
 
@@ -13,93 +12,90 @@ def calc_coverage(hits, total, length):
     return (math.pow(10, 9) * hits) / (total * length)
 
 
-class Filter(MRJob):
+parser = argparse.ArgumentParser(description='TODO')
+#TODO need a way of gracefully failing if counts isn't passed
+# maybe positional arguments can work in mrjob?
+parser.add_argument('gff')
+parser.add_argument('--counts', help='TODO')
 
-    """TODO"""
+parser.add_argument('--min-length', type=float, default=float('-inf'),
+    help='TODO')
+parser.add_argument('--max-length', type=float, default=float('inf'),
+    help='TODO')
 
-    INTERNAL_PROTOCOL = PickleProtocol
-    OUTPUT_PROTOCOL = RawValueProtocol
+parser.add_argument('--min-coverage', type=float, default=float('-inf'),
+    help='TODO')
+parser.add_argument('--max-coverage', type=float, default=float('inf'),
+    help='TODO')
 
-    def configure_options(self):
-        """Define command-line options."""
+parser.add_argument('--min-exons', type=float, default=float('-inf'),
+    help='TODO')
+parser.add_argument('--max-exons', type=float, default=float('inf'),
+    help='TODO')
 
-        super(Filter, self).configure_options()
 
-        #TODO need a way of gracefully failing if counts isn't passed
-        # maybe positional arguments can work in mrjob?
-        self.add_file_option('--counts', help='TODO')
+def load_counts(path):
+    total = 0
+    counts = {}
 
-        self.add_passthrough_option('--min-length', type=float, default=float('-inf'),
-            help='TODO')
-        self.add_passthrough_option('--max-length', type=float, default=float('inf'),
-            help='TODO')
+    for line in open(path):
+        ref_name, counts_json = line.strip().split('\t')
+        counts = json.loads(counts_json)
+        total += sum(counts.values())
+        counts[ref_name] = counts
 
-        self.add_passthrough_option('--min-coverage', type=float, default=float('-inf'),
-            help='TODO')
-        self.add_passthrough_option('--max-coverage', type=float, default=float('inf'),
-            help='TODO')
+def build_tree(path):
+    chromosomes = {}
+    genes = {}
+    mRNAs = {}
 
-        self.add_passthrough_option('--min-exons', type=float, default=float('-inf'),
-            help='TODO')
-        self.add_passthrough_option('--max-exons', type=float, default=float('inf'),
-            help='TODO')
+    for feature in Feature.from_file(path):
 
-    def mapper(self, key, line):
-        """TODO"""
+        if feature.type == 'chromosome':
+            feature.children = {}
+            chromosomes[feature.ID] = feature
 
-        try:
-            f = Feature.from_string(line)
+        elif feature.type == 'gene':
+            feature.children = {}
+            genes[feature.ID] = feature
+            feature.parent = chromosomes[feature.seqid]
+            feature.parent.children[feature.ID] = feature
 
-            if f.type == 'mRNA':
-                yield f.ID, f
+        elif feature.type in ['mRNA', 'noncoding_transcript']:
+            feature.children = []
+            feature.parent = genes[feature.attributes['Parent']]
+            feature.parent.children[feature.ID] = feature
+            if feature.type == 'mRNA':
+                mRNAs[feature.ID] = feature
 
-            elif f.type == 'exon':
-                for parent in f.parents:
-                    yield parent, f
+        elif feature.type in ['five_prime_UTR', 'CDS', 'three_prime_UTR', 'exon']:
+            feature.parent = mRNAs[feature.attributes['Parent']]
+            feature.parent.children.append(feature)
 
-        except Feature.ParseError:
-            pass
+        elif feature.type == 'protein':
+            feature.parent = mRNAs[feature.attributes['Derives_from']]
+            feature.parent.children.append(feature)
 
-    def reducer_init(self):
-        self.total = 0
-        self.counts = {}
+    return chromosomes, genes, mRNAs
 
-        if self.options.counts:
-            for line in open(self.options.counts):
-                ref_name, counts_json = line.strip().split('\t')
-                counts = json.loads(counts_json)
-                self.total += sum(counts.values())
-                self.counts[ref_name] = counts
 
-    def reducer(self, ID, features):
-        exons = 0
-        mRNA = None
+def filter_by_mRNA_length(mRNAs, minimum, maximum):
+    for mRNA in mRNAs:
+        if mRNA.length < minimum or mRNA.length > maximum:
+            del mRNA.parent.children[mRNA.ID]
 
-        for f in features:
-            if f.type == 'exon':
-                exons += 1
-            else:
-                mRNA = f
 
-        if not mRNA:
-            return
+def filter_by_exon_count(mRNAs, minimum, maximum):
+    for mRNA in mRNAs:
+        num = len([x for x in mRNA.children if x.type == 'exon'])
+        if num < minimum or num > maximum:
+            del mRNA.parent.children[mRNA.ID]
 
-        hits = sum(self.counts[ID].values()) if ID in self.counts else 0
 
-        try:
-            coverage = calc_coverage(hits, self.total, mRNA.length)
-        except ZeroDivisionError:
-            coverage = 0
-
-        if mRNA.length >= self.options.min_length and \
-           mRNA.length <= self.options.max_length and \
-           exons >= self.options.min_exons and \
-           exons <= self.options.max_exons and \
-           coverage >= self.options.min_coverage and \
-           coverage <= self.options.max_coverage:
-
-              yield None, mRNA
-
+def filter_gene_no_children():
+    for gene in genes:
+        if len(genes.children) == 0:
+            del gene.parent.children[gene.ID]
 
 if __name__ == '__main__':
-    Filter.run()
+    args = parser.parse_args()
