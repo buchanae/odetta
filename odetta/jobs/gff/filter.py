@@ -72,13 +72,12 @@ def filter_by_transcript_length(transcripts, minimum, maximum):
             del transcript.parent.children[transcript.ID]
 
 
-def filter_mRNA_by_exon_count(transcripts, minimum, maximum):
+def filter_transcript_by_exon_count(transcripts, minimum, maximum):
 
     for transcript in transcripts:
-        if transcript.type == 'mRNA':
-            num = len([x for x in transcript.children if x.type == 'exon'])
-            if num < minimum or num > maximum:
-                del transcript.parent.children[transcript.ID]
+        num = len([x for x in transcript.children if x.type == 'exon'])
+        if num < minimum or num > maximum:
+            del transcript.parent.children[transcript.ID]
 
 
 def filter_by_transcript_coverage(transcripts, counts, minimum, maximum):
@@ -149,7 +148,7 @@ if __name__ == '__main__':
     chromosomes, genes, transcripts = build_tree(Feature.from_file(args.gff))
 
     filter_by_transcript_length(transcripts.values(), args.min_length, args.max_length)
-    filter_mRNA_by_exon_count(transcripts.values(), args.min_exons, args.max_exons)
+    filter_transcript_by_exon_count(transcripts.values(), args.min_exons, args.max_exons)
     filter_gene_no_children(genes.values())
 
     if args.counts:
