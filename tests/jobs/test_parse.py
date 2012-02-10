@@ -1,24 +1,10 @@
 from nose.tools import eq_, ok_
 
 from odetta.jobs.parse import *
-from odetta.jobs.parse.util import model
 from tests import *
 
 
 disable_mrjob_loggers()
-
-
-def test_model():
-    m = model([
-      ('one', ''),
-      ('two', 0),
-      ('three', 'd'),
-    ])
-
-    b = m(['foo', '1'])
-    eq_('foo', b['one'])
-    eq_(1, b['two'])
-    eq_('d', b['three'])
 
 
 #TODO test SAM with many extra columns

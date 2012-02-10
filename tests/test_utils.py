@@ -25,3 +25,16 @@ def test_distance_between():
 
     eq_(-15, distance_between(a, b))
     eq_(-15, distance_between(b, a))
+
+
+def test_model_parser():
+    m = model_parser([
+      ('one', ''),
+      ('two', 0),
+      ('three', 'd'),
+    ])
+
+    b = m(['foo', '1'])
+    eq_('foo', b['one'])
+    eq_(1, b['two'])
+    eq_('d', b['three'])

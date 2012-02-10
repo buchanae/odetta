@@ -1,8 +1,8 @@
 from mrjob.job import MRJob
 
-from util import model
+from odetta.utils import model_parser
 
-splat_model = model([
+splat_model = model_parser([
     ('reference', ''),
     ('flanks', ''),
     ('a_length', 0),

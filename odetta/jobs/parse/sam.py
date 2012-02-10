@@ -1,9 +1,9 @@
 from mrjob.job import MRJob
 
-from util import model
+from odetta.utils import model_parser
 
 
-sam_model = model([
+sam_model = model_parser([
     ('ID', ''),
     ('flag', 0),
     ('reference', ''),

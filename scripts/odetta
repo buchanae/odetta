@@ -50,10 +50,10 @@ if __name__ == '__main__':
     if args.command == 'run':
         run_args, job_args = run_parser.parse_known_args(args.args)
 
-        if run_args.job in odetta.jobs.names:
-            job_cls = odetta.jobs.names[run_args.job]
-            subprocess.call(['python', job_cls.mr_job_script()] + job_args)
-        else:
+        try:
+            path = odetta.jobs.job_path[run_args.job]
+            subprocess.call(['python', path] + job_args)
+        except KeyError:
             sys.exit('Error: unknown job')
             #TODO would be useful to print job list here
 

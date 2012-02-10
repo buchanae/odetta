@@ -4,7 +4,7 @@ from mrjob.job import MRJob
 from mrjob.protocol import PickleProtocol, RawValueProtocol
 from pyfasta import Fasta
 
-from feature import Feature
+from odetta.gff.feature import Feature
 
 
 complements = string.maketrans('ATCGN', 'TAGCN')

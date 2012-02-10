@@ -5,7 +5,7 @@ from mrjob.protocol import RawValueProtocol
 #TODO maybe make rtree optional and fall back on pyrtree?
 import rtree
 
-from feature import Feature
+from odetta.gff.feature import Feature
 
 
 def calc_overlap(a, b):

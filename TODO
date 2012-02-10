@@ -8,6 +8,9 @@ make file isn't the greatest.  rules like splat-unaligned and split-unaligned*.s
 
 use JSONValueProtocol instead?  removes leading null and tab, which are in almost every output
 
+unit tests for gff filter
+
+gff filter doesn't handle invalid gff records/files 
 
 update README
 

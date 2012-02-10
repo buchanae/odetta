@@ -1,20 +1,25 @@
-import gff
-import pairs
-import parse
+import os
 
-#TODO generate this automatically
-names = {
-    'gff.filter': gff.Filter,
-    'gff.overlap': gff.Overlap,
-    'gff.transcriptome': gff.Transcriptome,
-    'pairs.combiner': pairs.Combiner,
-    'pairs.distance-statistics': pairs.DistanceStatistics,
-    'pairs.reference-counts': pairs.ReferenceCounts,
-    'pairs.to-splat': pairs.ToSplat,
-    'pairs.unambiguous-filter': pairs.UnambiguousFilter,
-    'pairs.distance-filter': pairs.DistanceFilter,
-    'parse.bowtie': parse.Bowtie,
-    'parse.sam': parse.SAM,
-    'parse.splat': parse.Splat,
-    'parse.split-splat': parse.SplitSplat,
+
+#TODO there is a better way to do all this
+_base = os.path.dirname(os.path.abspath(__file__))
+_path = lambda *x: os.path.join(_base, *x)
+_gff = lambda x: _path('gff', x)
+_pairs = lambda x: _path('pairs', x)
+_parse = lambda x: _path('parse', x)
+
+job_path = {
+    'gff.filter': _gff('filter.py'),
+    'gff.overlap': _gff('overlap.py'),
+    'gff.transcriptome': _gff('transcriptome.py'),
+    'pairs.combiner': _pairs('combiner.py'),
+    'pairs.distance_filter': _pairs('distance_filter.py'),
+    'pairs.distance_statistics': _pairs('distance_statistics.py'),
+    'pairs.reference_counts': _pairs('reference_counts.py'),
+    'pairs.to_splat': _pairs('to_splat.py'),
+    'pairs.unambiguous_filter': _pairs('unambiguous_filter.py'),
+    'parse.bowtie': _parse('bowtie.py'),
+    'parse.sam': _parse('sam.py'),
+    'parse.splat': _parse('splat.py'),
+    'parse.split_splat': _parse('split_splat.py'),
 }

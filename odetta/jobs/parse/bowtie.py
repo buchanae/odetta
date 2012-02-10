@@ -1,9 +1,9 @@
 from mrjob.job import MRJob
 
-from util import model
+from odetta.utils import model_parser
 
 
-bowtie_model = model([
+bowtie_model = model_parser([
     ('ID', ''),
     ('strand', '+'),
     ('reference', ''),
