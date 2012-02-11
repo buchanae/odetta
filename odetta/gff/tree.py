@@ -37,3 +37,16 @@ def build_tree(features):
             feature.parent.children.append(feature)
 
     return chromosomes, genes, transcripts
+
+
+def flatten_tree(chromosomes):
+    flat = []
+    for chromosome in chromosomes.values():
+        flat.append(chromosome)
+        for gene in chromosome.children.values():
+            flat.append(gene)
+            for transcript in gene.children.values():
+                flat.append(transcript)
+                for part in transcript.children:
+                    flat.append(part)
+    return flat

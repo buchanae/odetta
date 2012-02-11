@@ -3,7 +3,7 @@ import json
 import math
 
 from odetta.gff.feature import Feature
-from odetta.gff.tree import build_tree
+from odetta.gff.tree import build_tree, flatten_tree
 
 
 parser = argparse.ArgumentParser(description='TODO')
@@ -89,19 +89,6 @@ class Counts(object):
             return (math.pow(10, 9) * hits) / (self.total * feature.length)
         except ZeroDivisionError:
             return 0
-
-
-def flatten_tree(chromosomes):
-    flat = []
-    for chromosome in chromosomes.values():
-        flat.append(chromosome)
-        for gene in chromosome.children.values():
-            flat.append(gene)
-            for transcript in gene.children.values():
-                flat.append(transcript)
-                for part in transcript.children:
-                    flat.append(part)
-    return flat
                     
     
 if __name__ == '__main__':
