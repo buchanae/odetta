@@ -17,6 +17,7 @@ setup(
     license='Apache',
     classifiers=[],
     packages=['odetta',
+              'odetta.gff',
               'odetta.jobs',
               'odetta.jobs.gff',
               'odetta.jobs.pairs',
