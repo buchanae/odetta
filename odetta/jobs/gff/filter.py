@@ -27,34 +27,6 @@ parser.add_argument('--max-exons', type=float, default=float('inf'),
     help='TODO')
 
 
-def filter_by_transcript_length(transcripts, minimum, maximum):
-
-    for transcript in transcripts:
-        if transcript.length < minimum or transcript.length > maximum:
-            del transcript.parent.children[transcript.ID]
-
-
-def filter_transcript_by_exon_count(transcripts, minimum, maximum):
-
-    for transcript in transcripts:
-        num = len([x for x in transcript.children if x.type == 'exon'])
-        if num < minimum or num > maximum:
-            del transcript.parent.children[transcript.ID]
-
-
-def filter_by_transcript_coverage(transcripts, counts, minimum, maximum):
-
-    for transcript in transcripts:
-        coverage = counts.coverage(transcript)
-        if coverage < minimum or coverage > maximum:
-            del transcript.parent.children[transcript.ID]
-
-
-def filter_gene_no_children(genes):
-
-    for gene in genes:
-        if len(gene.children) == 0:
-            del gene.parent.children[gene.ID]
 
 
 class Counts(object):
@@ -96,14 +68,28 @@ if __name__ == '__main__':
 
     chromosomes, genes, transcripts = build_tree(Feature.from_file(args.gff))
 
-    filter_by_transcript_length(transcripts.values(), args.min_length, args.max_length)
-    filter_transcript_by_exon_count(transcripts.values(), args.min_exons, args.max_exons)
-    filter_gene_no_children(genes.values())
+    # TODO would be nice to split filters out into predicate functions
+    for transcript in transcripts.values():
 
-    if args.counts:
-        counts = Counts.from_file(args.counts)
-        filter_by_transcript_coverage(transcripts.values(), counts, 
-                                      args.min_coverage, args.max_coverage)
+        exons = len([x for x in transcript.children if x.type == 'exon'])
+
+        if args.counts:
+            counts = Counts.from_file(args.counts)
+            coverage = counts.coverage(transcript)
+        else:
+            coverage = 0
+
+        if transcript.length < args.min_length or transcript.length > args.max_length \
+        or exons < args.min_exons or exons > args.max_exons \
+        or coverage < args.min_coverage or coverage > args.max_coverage:
+
+            del transcript.parent.children[transcript.ID]
+
+
+    for gene in genes.values():
+        if len(gene.children) == 0:
+            del gene.parent.children[gene.ID]
+
 
     flat = flatten_tree(chromosomes)
     print '\n'.join([str(f) for f in flat])
