@@ -11,9 +11,10 @@ unaligned.fasta aligned.bowtie : $(GENOME_EBWT)
 							aligned.bowtie
 {% endblock %}
 
-{% block splats %}
-splat.json : *.supersplat
-		$(JOB) parse.split-splat $^ > splat.json
+{% block paired_splats %}
+splat.json : splats
+    mv splats splats.prefilter
+		$(JOB) parse.split-splat splats.prefilter > splat.json
 
 aligned.json : aligned.bowtie
 		$(JOB) parse.bowtie aligned.bowtie > aligned.json
