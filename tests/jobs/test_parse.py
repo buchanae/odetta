@@ -44,18 +44,22 @@ def test_Splat(out):
     eq_('ChrC', v['reference'])
     eq_(1, v['start'])
     eq_(4, v['end'])
-    eq_('bas,baz', v['read_IDs'])
-    eq_('-', v['strand'])
+    eq_('-bas,+baz', v['read_IDs'])
 
     k, v = out['ChrB']
-    eq_('+', v['strand'])
 
     k, v = out['ChrA']
     eq_('', v['read_IDs'])
-    eq_('+', v['strand'])
 
 @dummytest(SplitSplat(), 'splat')
 def test_SplitSplat(out):
-    eq_(['', 'bas', 'baz', 'foo'], sorted([x[1]['ID'] for x in out]))
-    ok_('read_IDs' not in x[1])
-    ok_('read_count' not in x[1])
+    out = dict((x[1]['ID'], x[1]) for x in out)
+    eq_(['', 'bas', 'baz', 'foo'], sorted(out.keys()))
+
+    print out
+    eq_('-', out['bas']['strand'])
+    eq_('+', out['baz']['strand'])
+    eq_('+', out['foo']['strand'])
+
+    ok_('read_IDs' not in out['bas'])
+    ok_('read_count' not in out['bas'])

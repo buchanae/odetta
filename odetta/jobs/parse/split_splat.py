@@ -18,7 +18,13 @@ class SplitSplat(Splat):
         del splat['read_IDs']
 
         for ID in IDs:
-            splat['ID'] = ID
+            if len(ID) > 0 and ID[0] in ('+', '-'):
+                splat['ID'] = ID[1:]
+                splat['strand'] = ID[0]
+            else:
+                splat['ID'] = ID
+                splat['strand'] = '+'
+
             yield key, splat
 
 

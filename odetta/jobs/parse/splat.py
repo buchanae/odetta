@@ -15,7 +15,6 @@ splat_model = model_parser([
     ('sequence', ''),
     ('read_count', 0),
     ('read_IDs', ''),
-    ('strand', '+'),
 ])
 
 class Splat(MRJob):
