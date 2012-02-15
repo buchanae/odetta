@@ -51,10 +51,13 @@ def test_reference_counts(out):
 
 @dummytest(Combiner(), 'combiner')
 def test_combiner(out):
-    eq_([('foo\\1', 'foo\\2'), ('foz\\1', 'foz\\2'), ('foz\\1', 'foz\\2')], 
+    eq_([('foo:7:1:1:1#0/1', 'foo:7:1:1:1#0/2'), 
+         ('foo:7:1:1:5#0/1', 'foo:7:1:1:5#0/2'), 
+         ('foo:7:1:1:5#0/1', 'foo:7:1:1:5#0/2')], 
         sorted([(x[1][0]['ID'], x[1][1]['ID']) for x in out]))
 
 
 @dummytest(Combiner(args=['--unambiguous-only']), 'combiner')
 def test_unambiguous_combiner(out):
-    eq_([('foo\\1', 'foo\\2')], [(x[1][0]['ID'], x[1][1]['ID']) for x in out])
+    eq_([('foo:7:1:1:1#0/1', 'foo:7:1:1:1#0/2')], 
+        [(x[1][0]['ID'], x[1][1]['ID']) for x in out])

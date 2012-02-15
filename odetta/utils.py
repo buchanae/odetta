@@ -1,10 +1,27 @@
-def ID_base(ID):
-    """
-    Return the base of a read ID.
+import re
 
-    For example, given read ID "Foo\1" the base is "Foo".
-    """
-    return ID.split('\\')[0]
+
+illumina_ID_rx = re.compile(r'(?P<instrument>.+):(?P<lane>\d+):(?P<tile>\d+):(?P<x>\d+):(?P<y>\d+)(?:#(?P<index>\d)/(?P<pair_member>\d)){0,1}(?: (?P<extra>.+)){0,1}$')
+
+custom_ID_rx = re.compile(r'(?P<instrument>.+):(?P<run>\d+):(?P<flowcell>.+):(?P<lane>\d+):(?P<tile>\d+):(?P<x>\d+):(?P<y>\d+)\\(?P<pair_member>\d)$')
+
+
+def parse_ID(ID):
+
+    m = illumina_ID_rx.match(ID)
+    if m:
+        return m.groupdict()
+
+    m = custom_ID_rx.match(ID)
+    if m:
+        return m.groupdict()
+
+    return None
+
+
+def pair_key(ID):
+    i = parse_ID(ID)
+    return ':'.join([i['lane'], i['tile'], i['x'], i['y']])
 
 
 def distance_between(a, b):

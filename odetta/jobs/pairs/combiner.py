@@ -4,7 +4,7 @@ from mrjob.job import MRJob
 from mrjob.protocol import JSONProtocol
 
 from odetta.jobs.pairs.unambiguous_filter import UnambiguousFilter
-from odetta.utils import ID_base
+from odetta.utils import pair_key
 
 
 class Combiner(MRJob):
@@ -26,7 +26,7 @@ class Combiner(MRJob):
     def mapper(self, key, alignment):
         """Use alignment ID base as key, for grouping."""
 
-        yield ID_base(alignment['ID']), alignment
+        yield pair_key(alignment['ID']), alignment
 
     def reducer(self, key, alignments):
         """Filter and emit valid alignments individually."""
