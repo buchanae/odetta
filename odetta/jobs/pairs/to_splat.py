@@ -23,8 +23,11 @@ class ToSplat(MRJob):
         """TODO"""
 
         for x in pair:
-            if x['type'] == 'splat':
-                yield splat_template.format(**x), x['ID']
+            try:
+                if x['type'] == 'splat':
+                    yield splat_template.format(**x), x['ID']
+            except KeyError:
+                pass
 
 
     def reducer(self, splat_partial, IDs):
