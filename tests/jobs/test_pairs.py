@@ -16,9 +16,9 @@ def test_distance_stats(out):
 def test_ToSplat(out):
     eq_(2, len(out))
     a = '\t'.join(['ChrD', 'AT-GT', '10', '11', '13', '21', '22', '23', '24',
-                   'ATCG', '2', 'bay1,bay2', '-'])
+                   'ATCG', '2', 'bay1,bay2'])
     b = '\t'.join(['ChrC', 'AT-GT', '50', '51', '53', '61', '62', '63', '64',
-                   'ATTT', '2', 'foo1,foo2', '-'])
+                   'ATTT', '2', 'foo1,foo2'])
     ok_([b, a], sorted([x[1] for x in out]))
 
 
