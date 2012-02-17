@@ -10,15 +10,11 @@ class ReferenceCounts(ReferenceCountsBase):
     reference count jobs.
     """
 
-    def mapper(self, key, pair):
+    def mapper(self, key, alignment):
         """
         TODO
         """
-        x, y = pair
-
-        # this assumes x and y have the same reference
-        yield x['reference'], '-'.join(sorted([self.alignment_type(x), 
-                                               self.alignment_type(y)]))
+        yield alignment['reference'], self.alignment_type(alignment)
 
 
 if __name__ == '__main__':

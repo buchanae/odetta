@@ -1,12 +1,13 @@
 import os
 
 
-#TODO there is a better way to do all this
+#TODO there is a better way to define all this
 _base = os.path.dirname(os.path.abspath(__file__))
 _path = lambda *x: os.path.join(_base, *x)
 _gff = lambda x: _path('gff', x)
 _pairs = lambda x: _path('pairs', x)
 _parse = lambda x: _path('parse', x)
+_single = lambda x: _path('single', x)
 
 job_path = {
     'gff.filter': _gff('filter.py'),
@@ -22,4 +23,5 @@ job_path = {
     'parse.sam': _parse('sam.py'),
     'parse.splat': _parse('splat.py'),
     'parse.split_splat': _parse('split_splat.py'),
+    'single.reference_counts': _single('reference_counts.py'),
 }
