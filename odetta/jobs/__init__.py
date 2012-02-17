@@ -10,6 +10,7 @@ _parse = lambda x: _path('parse', x)
 _single = lambda x: _path('single', x)
 
 job_path = {
+    'gff.blast': _gff('blast.py'),
     'gff.filter': _gff('filter.py'),
     'gff.overlap': _gff('overlap.py'),
     'gff.transcriptome': _gff('transcriptome.py'),
