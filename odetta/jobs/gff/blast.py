@@ -28,6 +28,7 @@ if __name__ == '__main__':
 
         hits = x.findall('.//Hit')
         for hit in hits:
+            hit_def = hit.findtext('.//Hit_def')
             hit_len = hit.findtext('.//Hit_len')
             identity = hit.findtext('.//Hsp_identity')
             align_len = hit.findtext('.//Hsp_align-len')
@@ -41,13 +42,14 @@ if __name__ == '__main__':
             if p >= args.min_match:
                 try:
                     t = transcripts[ID]
-                    del t.parent.children[ID]
                 except KeyError:
                     pass
-
-    for gene in genes.values():
-        if len(gene.children) == 0:
-            del gene.parent.children[gene.ID]
+                else:
+                    try:
+                        t.attributes['blasts_to'] = ','.join([t.attributes['blasts_to'),
+                                                              hit_def])
+                    except KeyError:
+                        t.attributes['blasts_to'] = hit_def
 
     for f in flatten_tree(chromosomes):
         print f
