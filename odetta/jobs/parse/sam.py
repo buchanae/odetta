@@ -35,6 +35,8 @@ class SAM(MRJob):
 
     def mapper(self, key, line):
 
+        if line[0] == '@': return
+
         data = sam_model(line.split('\t'))
 
         data['end'] = data['start'] + len(data['sequence'])
