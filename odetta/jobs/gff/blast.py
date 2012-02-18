@@ -46,7 +46,7 @@ if __name__ == '__main__':
                     pass
                 else:
                     try:
-                        t.attributes['blasts_to'] = ','.join([t.attributes['blasts_to'),
+                        t.attributes['blasts_to'] = ','.join([t.attributes['blasts_to'],
                                                               hit_def])
                     except KeyError:
                         t.attributes['blasts_to'] = hit_def
