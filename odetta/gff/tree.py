@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
 
-def build_tree(features):
+def build_tree(features, safe=False):
     chromosomes = OrderedDict()
     genes = OrderedDict()
     transcripts = OrderedDict()
@@ -15,26 +15,58 @@ def build_tree(features):
         elif feature.type == 'gene':
             feature.children = OrderedDict()
             genes[feature.ID] = feature
-            feature.parent = chromosomes[feature.seqid]
-            feature.parent.children[feature.ID] = feature
+
+            try:
+                feature.parent = chromosomes[feature.seqid]
+                feature.parent.children[feature.ID] = feature
+            except KeyError:
+                if safe:
+                    pass
+                else:
+                    raise
 
         elif feature.type in ['mRNA', 'noncoding_transcript']:
             feature.children = []
-            feature.parent = genes[feature.attributes['Parent']]
-            feature.parent.children[feature.ID] = feature
             transcripts[feature.ID] = feature
 
+            try:
+                feature.parent = genes[feature.attributes['Parent']]
+                feature.parent.children[feature.ID] = feature
+            except KeyError:
+                if safe:
+                    pass
+                else:
+                    raise
+
         elif feature.type in ['five_prime_UTR', 'three_prime_UTR', 'exon']:
-            feature.parent = transcripts[feature.attributes['Parent']]
-            feature.parent.children.append(feature)
+            try:
+                feature.parent = transcripts[feature.attributes['Parent']]
+                feature.parent.children.append(feature)
+            except KeyError:
+                if safe:
+                    pass
+                else:
+                    raise
 
         elif feature.type == 'CDS':
-            feature.parent = transcripts[feature.attributes['Parent'][0]]
-            feature.parent.children.append(feature)
+            try:
+                feature.parent = transcripts[feature.attributes['Parent'][0]]
+                feature.parent.children.append(feature)
+            except KeyError:
+                if safe:
+                    pass
+                else:
+                    raise
 
         elif feature.type == 'protein':
-            feature.parent = transcripts[feature.attributes['Derives_from']]
-            feature.parent.children.append(feature)
+            try:
+                feature.parent = transcripts[feature.attributes['Derives_from']]
+                feature.parent.children.append(feature)
+            except KeyError:
+                if safe:
+                    pass
+                else:
+                    raise
 
     return chromosomes, genes, transcripts
 
